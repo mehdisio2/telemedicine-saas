@@ -31,11 +31,11 @@ export function LoginForm() {
       console.log("Logged in user:", user);
       switch (user.role) {
         case "patient":
-          router.push("/patient");
+          router.push("/patient/dashboard");
           break;
 
         case "doctor":
-          router.push("/doctor");
+          router.push("/doctor/dashboard");
           break;
 
         default:
