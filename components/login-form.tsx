@@ -1,6 +1,5 @@
 "use client"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Field,
@@ -9,6 +8,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { loginUser } from "@/lib/utils"
 
 export function LoginForm() {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -18,9 +18,15 @@ export function LoginForm() {
     const email = formData.get("email")
     const password = formData.get("password")
 
-    console.log("Logging in:", { email, password })
-  }
+    try {
+      await loginUser(email as string, password as string)
+      // Handle successful login (e.g., redirect to dashboard)
 
+    } catch (error) {
+      console.error("Error logging in:", error)
+      // Handle login error (e.g., show error message to user)
+    }
+}
   return (
     <form onSubmit={handleLogin} className="flex flex-col gap-6">
       <FieldGroup>
@@ -56,7 +62,7 @@ export function LoginForm() {
         <Field>
           <FieldDescription className="text-center">
             Don&apos;t have an account?{" "}
-            <a href="#" className="underline underline-offset-4">
+            <a href="/signup" className="underline underline-offset-4">
               Sign up
             </a>
           </FieldDescription>
