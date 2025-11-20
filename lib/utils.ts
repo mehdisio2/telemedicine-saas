@@ -48,5 +48,16 @@ export async function loginUser(email: string, password: string) {
 
   if (error) throw error;
 
-  return data.user;
+  const user = data.user;
+
+  // Query your profiles table using the authenticated user's id
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError) throw profileError;
+
+  return profile;
 }

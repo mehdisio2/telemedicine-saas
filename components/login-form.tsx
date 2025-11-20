@@ -1,32 +1,51 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { loginUser } from "@/lib/utils"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { loginUser } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const router = useRouter();
 
-    const formData = new FormData(event.currentTarget)
-    const email = formData.get("email")
-    const password = formData.get("password")
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     try {
-      await loginUser(email as string, password as string)
-      // Handle successful login (e.g., redirect to dashboard)
+      const user = await loginUser(email, password);
 
+      if (!user) {
+        console.error("User not found");
+        return;
+      }
+      console.log("Logged in user:", user);
+      switch (user.role) {
+        case "patient":
+          router.push("/patient");
+          break;
+
+        case "doctor":
+          router.push("/doctor");
+          break;
+
+        default:
+          router.push("/");
+      }
     } catch (error) {
-      console.error("Error logging in:", error)
-      // Handle login error (e.g., show error message to user)
+      console.error("Error logging in:", error);
     }
-}
+  };
+
   return (
     <form onSubmit={handleLogin} className="flex flex-col gap-6">
       <FieldGroup>
@@ -69,5 +88,5 @@ export function LoginForm() {
         </Field>
       </FieldGroup>
     </form>
-  )
+  );
 }
