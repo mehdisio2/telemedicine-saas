@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,6 +28,7 @@ export function AppointmentDialog({ name, specialty, email, doctorId }: DoctorCa
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -53,6 +55,9 @@ export function AppointmentDialog({ name, specialty, email, doctorId }: DoctorCa
       }
 
       setSuccess(true);
+      setTimeout(() => {
+        router.push("/patient/dashboard");
+      }, 1500);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -123,4 +128,3 @@ export function AppointmentDialog({ name, specialty, email, doctorId }: DoctorCa
   );
 }
 
- 

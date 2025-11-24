@@ -36,51 +36,33 @@ export default function NewAppointmentPage() {
         setDoctors((data ?? []) as Doctor[]);
     };
 
-    return (
-        <div className="min-h-screen flex flex-col">
-            {/* sticky centered area that stays under the layout navbar on scroll.
-                The outer sticky wrapper is pointer-events-none so clicks pass through
-                outside the filter — the inner container is pointer-events-auto so the
-                SearchFilter itself remains interactive. Adjust `top-16` to match your NavBar height. */}
-            <div className="sticky z-50 pointer-events-none">
-                <div className="w-full max-w-3xl px-4 mx-auto pointer-events-auto">
-                    <div className="bg-white shadow-md rounded-md">
-                        <SearchFilter onSearch={handleSearch} className="!p-2 !gap-2" />
-                    </div>
+    return (    
+        <div className="min-h-screen">
+            <div className="max-w-7xl mx-auto px-2 sm:px-3 lg:px-4 space-y-4">
+                <h1 className="text-2xl font-bold mb-2 ml-2.5">Book a New Appointment</h1>
+                <p className="text-sm text-gray-600 mb-4 ml-2.5">Find available doctors matching your search.</p>
+                
+                <div className="md:sticky md:top-0 z-50 bg-white dark:bg-gray-900 -mx-2 sm:-mx-3 lg:-mx-4 px-2 sm:px-3 lg:px-4">
+                    <SearchFilter onSearch={handleSearch} />
                 </div>
-            </div>
 
-            {/* add top padding so page content doesn't sit under the sticky search (tune as needed) */}
-            <main className="flex-1 p-4 pt-24">
-                {doctors.length === 0 ? (
-                    <p className="text-center text-gray-500">
-                        No doctors found. Please use the search filter above to find doctors.
-                    </p>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-                        {doctors.map((doctor) => (
-                            <DoctorCard
-                                id={doctor.id}
-                                key={doctor.id}
-                                name={doctor.name}
-                                specialty={doctor.specialty}
-                                email={doctor.email}
-                            />
-                        ))}
-                    </div>
-                )}
-            </main>
+                <hr className="border-t border-gray-200 dark:border-gray-700" />
 
-            {typeof window !== 'undefined' && (() => {
-                const width = window.innerWidth;
-                const cols = width >= 1024 ? 4 : width >= 768 ? 3 : width >= 640 ? 2 : 1;
-                const rows = Math.ceil(doctors.length / cols);
-                return rows === 3 ? (
-                    <div className="flex justify-center py-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {doctors.map((doctor) => (
+                        <DoctorCard key={doctor.id} {...doctor} />
+                    ))}
+                </div>
+                
+                {doctors.length > 3 && (
+                    <div className="flex justify-center mt-4">
                         <PaginationDemo />
                     </div>
-                ) : null;
-            })()}
+                )}
+            
+                {/* bottom spacer to create white space for scrolling tests */}
+                <div className="h-64 md:h-96" aria-hidden="true" />
+            </div>
         </div>
     )
 }

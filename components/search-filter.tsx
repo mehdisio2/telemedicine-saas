@@ -40,7 +40,7 @@ const   SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch,
 
     return (
         <form
-            className={`flex flex-wrap items-center gap-3 p-3 border-gray-800 border-2 rounded-md ${className ?? ""}`}
+            className={`flex flex-wrap items-center gap-3 p-3 rounded-md ${className ?? ""}`}
             onSubmit={(e) => {
                 e.preventDefault();
                 handleSearch();

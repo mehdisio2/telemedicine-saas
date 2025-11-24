@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface AppointmentFormProps {
   doctorId: string;
@@ -13,6 +14,7 @@ export function AppointmentForm({ doctorId }: AppointmentFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +41,8 @@ export function AppointmentForm({ doctorId }: AppointmentFormProps) {
       }
 
       setSuccess(true);
+      router.push("/patient/dashboard");
+
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -86,7 +90,6 @@ export function AppointmentForm({ doctorId }: AppointmentFormProps) {
           {loading ? "Booking..." : "Book Appointment"}
         </button>
         {error && <p className="text-red-500 mt-2">{error}</p>}
-        {success && <p className="text-green-500 mt-2">Appointment booked successfully!</p>}
       </form>
     </div>
   );
