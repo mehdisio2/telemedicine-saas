@@ -2,6 +2,8 @@
 import SearchFilter from "@/components/search-filter"
 import { supabase } from "@/lib/supabaseClient"
 import { useState } from "react"
+import { DoctorCard } from "@/components/doctor-card"
+import { PaginationDemo } from "@/components/pagination"
 
 type Doctor = {
     id: string;
@@ -42,25 +44,36 @@ export default function NewAppointmentPage() {
                     <div className="w-full px-4">
                         <SearchFilter className="p-2! gap-2!" onSearch={handleSearch}/>
                     </div>
-                </div>
-
+                </div>  
+            </main>
                 {/* Page content goes here */}
                 <div className="pt-6">
                     {doctors.length === 0 ? (
                         <p className="text-center text-gray-500">No doctors found. Please use the search filter above to find doctors.</p>
                     ) : (
-                        <ul className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
                             {doctors.map((doctor) => (
-                                <li key={doctor.id} className="p-4 border rounded-md">
-                                    <h3 className="text-lg font-semibold">{doctor.name}</h3>
-                                    <p className="text-sm text-gray-600">Specialty: {doctor.specialty}</p>
-                                    <p className="text-sm text-gray-600">Email: {doctor.email}</p>
-                                </li>
+                                <DoctorCard
+                                    key={doctor.id}
+                                    name={doctor.name}
+                                    specialty={doctor.specialty}
+                                    email={doctor.email}
+                                />
                             ))}
-                        </ul>
+                        </div>
                     )}
                 </div>
-            </main>
+                {typeof window !== 'undefined' && (() => {
+                    const width = window.innerWidth;
+                    const cols = width >= 1024 ? 4 : width >= 768 ? 3 : width >= 640 ? 2 : 1;
+                    const rows = Math.ceil(doctors.length / cols);
+                    return rows === 3 ? (
+                        <div className="flex justify-center py-4">
+                            <PaginationDemo />
+                        </div>
+                    ) : null;
+                })()}
+                
         </div>
     )
 }
