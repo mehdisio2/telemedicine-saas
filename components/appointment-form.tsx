@@ -1,121 +1,94 @@
-"use client"
+"use client";
 
-import { useState, useEffect, FormEvent } from "react"
-import { Button } from "@/components/ui/button"
-import { Field, FieldLabel, FieldGroup, FieldDescription } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select"
-import { supabase } from "@/lib/supabaseClient"
+import { useState } from "react";
 
-interface Doctor {
-  id: string
-  name: string | null
+interface AppointmentFormProps {
+  doctorId: string;
 }
 
-export function NewAppointment() {
-  const [date, setDate] = useState("")
-  const [time, setTime] = useState("")
-  const [description, setDescription] = useState("")
-  const [doctorId, setDoctorId] = useState("")
-  const [doctors, setDoctors] = useState<Doctor[]>([])
+export function AppointmentForm({ doctorId }: AppointmentFormProps) {
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    async function loadDoctors() {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, name")
-        .eq("role", "doctor")
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
 
-      if (!error && data) {
-        setDoctors(data as Doctor[])
+    const datetime = new Date(`${date}T${time}`).toISOString();
+
+    try {
+      const res = await fetch("/api/appointments/insert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          doctor_id: doctorId,
+          datetime,
+          description,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Failed to book appointment");
       }
+
+      setSuccess(true);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    loadDoctors()
-  }, [])
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    const datetime = new Date(`${date}T${time}:00`).toISOString()
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) return
-
-    const { error } = await supabase.from("appointments").insert({
-      patient_id: user.id,
-      doctor_id: doctorId,
-      datetime,
-      description,
-      status: "scheduled",
-    })
-
-    if (error) {
-      console.error(error)
-    }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md space-y-6">
-      <FieldGroup>
-
-        <Field>
-          <FieldLabel>Doctor</FieldLabel>
-          <Select onValueChange={(value: string) => setDoctorId(value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a doctor" />
-            </SelectTrigger>
-            <SelectContent>
-              {doctors.map((doc) => (
-                <SelectItem key={doc.id} value={doc.id}>
-                  {doc.name ?? "Unnamed doctor"}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-
-        <Field>
-          <FieldLabel>Date</FieldLabel>
-          <Input
+    <div className="mt-4">
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Date</label>
+          <input
             type="date"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            required
           />
-        </Field>
-
-        <Field>
-          <FieldLabel>Time</FieldLabel>
-          <Input
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Time</label>
+          <input
             type="time"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
             value={time}
             onChange={(e) => setTime(e.target.value)}
+            required
           />
-        </Field>
-
-        <Field>
-          <FieldLabel>Reason for visit</FieldLabel>
-          <FieldDescription>Describe your symptoms or concerns.</FieldDescription>
-          <Textarea
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Reason for Visit</label>
+          <textarea
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            rows={4}
           />
-        </Field>
-
-      </FieldGroup>
-
-      <Button type="submit">Schedule Appointment</Button>
-    </form>
-  )
+        </div>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          disabled={loading}
+        >
+          {loading ? "Booking..." : "Book Appointment"}
+        </button>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {success && <p className="text-green-500 mt-2">Appointment booked successfully!</p>}
+      </form>
+    </div>
+  );
 }
+

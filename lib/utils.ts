@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { supabase } from "@/lib/supabaseClient";
-
+import { createClient } from "./supabaseClient";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -13,6 +12,7 @@ export async function signUpUser(
   role: "patient" | "doctor",
   name: string
 ) {
+  const supabase = createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -41,6 +41,7 @@ export async function signUpUser(
 }
 
 export async function loginUser(email: string, password: string) {
+  const supabase = createClient();
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -66,6 +67,7 @@ export async function loginUser(email: string, password: string) {
 
 export async function getDoctorsBySpecialty({ specialty }: { specialty: string }) {
   console.log("Fetching doctors with specialty:", specialty);
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('profiles')
     .select('id, name, email, specialty')

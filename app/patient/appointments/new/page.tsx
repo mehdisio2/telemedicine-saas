@@ -1,6 +1,6 @@
 'use client'
 import SearchFilter from "@/components/search-filter"
-import { supabase } from "@/lib/supabaseClient"
+import {createClient} from "@/lib/supabaseClient"
 import { useState } from "react"
 import { DoctorCard } from "@/components/doctor-card"
 import { PaginationDemo } from "@/components/pagination"
@@ -16,6 +16,7 @@ export default function NewAppointmentPage() {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
 
     const handleSearch = async (filters: { specialty: string; date: string }) => {
+        const supabase = createClient();
         let query = supabase
             .from("profiles")
             .select("id, name, email, specialty")
@@ -54,6 +55,7 @@ export default function NewAppointmentPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
                             {doctors.map((doctor) => (
                                 <DoctorCard
+                                    id={doctor.id}
                                     key={doctor.id}
                                     name={doctor.name}
                                     specialty={doctor.specialty}
