@@ -57,7 +57,7 @@ export function AppointmentDialog({ name, specialty, email, doctorId }: DoctorCa
       setSuccess(true);
       setTimeout(() => {
         router.push("/patient/dashboard");
-      }, 1500);
+      }, 1000);
     } catch (err: any) {
       setError(err.message);
     } finally {
