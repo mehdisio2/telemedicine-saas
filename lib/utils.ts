@@ -13,6 +13,8 @@ export async function signUpUser(
   role: "patient" | "doctor",
   name: string
 ) {
+  if (!supabase) throw new Error("Supabase client not initialized");
+  
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -41,6 +43,8 @@ export async function signUpUser(
 }
 
 export async function loginUser(email: string, password: string) {
+  if (!supabase) throw new Error("Supabase client not initialized");
+  
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
