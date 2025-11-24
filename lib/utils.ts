@@ -61,3 +61,17 @@ export async function loginUser(email: string, password: string) {
 
   return profile;
 }
+
+// app/getDoctorsBySpecialty.ts
+
+export async function getDoctorsBySpecialty({ specialty }: { specialty: string }) {
+  console.log("Fetching doctors with specialty:", specialty);
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, name, email, specialty')
+    .eq('role', 'doctor')
+    .eq('specialty', specialty);
+
+  if (error) throw error;
+  return data ?? [];
+}
