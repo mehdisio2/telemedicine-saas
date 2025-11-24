@@ -23,7 +23,7 @@ const defaultSpecialties = [
     "Radiology",
 ];
 
-const SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch, className }) => {
+const   SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch, className }) => {
     const [specialty, setSpecialty] = useState<string>("");
     const [date, setDate] = useState<string>("");
 

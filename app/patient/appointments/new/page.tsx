@@ -1,6 +1,6 @@
 'use client'
 import SearchFilter from "@/components/search-filter"
-import {createClient} from "@/lib/supabaseClient"
+import { createClient } from "@/lib/supabaseClient"
 import { useState } from "react"
 import { DoctorCard } from "@/components/doctor-card"
 import { PaginationDemo } from "@/components/pagination"
@@ -37,45 +37,50 @@ export default function NewAppointmentPage() {
     };
 
     return (
-        <div className="min-h-screen">
-            <main className="px-4 max-w-4xl mx-auto">
-                {/* sticky filter that sits under the layout navbar.
-                    Ad  just `top-16` if your NavBar height is different. */}
-                <div className="sticky top-8 z-40">
-                    <div className="w-full px-4">
-                        <SearchFilter className="p-2! gap-2!" onSearch={handleSearch}/>
+        <div className="min-h-screen flex flex-col">
+            {/* sticky centered area that stays under the layout navbar on scroll.
+                The outer sticky wrapper is pointer-events-none so clicks pass through
+                outside the filter — the inner container is pointer-events-auto so the
+                SearchFilter itself remains interactive. Adjust `top-16` to match your NavBar height. */}
+            <div className="sticky z-50 pointer-events-none">
+                <div className="w-full max-w-3xl px-4 mx-auto pointer-events-auto">
+                    <div className="bg-white shadow-md rounded-md">
+                        <SearchFilter onSearch={handleSearch} className="!p-2 !gap-2" />
                     </div>
-                </div>  
-            </main>
-                {/* Page content goes here */}
-                <div className="pt-6">
-                    {doctors.length === 0 ? (
-                        <p className="text-center text-gray-500">No doctors found. Please use the search filter above to find doctors.</p>
-                    ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-                            {doctors.map((doctor) => (
-                                <DoctorCard
-                                    id={doctor.id}
-                                    key={doctor.id}
-                                    name={doctor.name}
-                                    specialty={doctor.specialty}
-                                    email={doctor.email}
-                                />
-                            ))}
-                        </div>
-                    )}
                 </div>
-                {typeof window !== 'undefined' && (() => {
-                    const width = window.innerWidth;
-                    const cols = width >= 1024 ? 4 : width >= 768 ? 3 : width >= 640 ? 2 : 1;
-                    const rows = Math.ceil(doctors.length / cols);
-                    return rows === 3 ? (
-                        <div className="flex justify-center py-4">
-                            <PaginationDemo />
-                        </div>
-                    ) : null;
-                })()}
-                
+            </div>
+
+            {/* add top padding so page content doesn't sit under the sticky search (tune as needed) */}
+            <main className="flex-1 p-4 pt-24">
+                {doctors.length === 0 ? (
+                    <p className="text-center text-gray-500">
+                        No doctors found. Please use the search filter above to find doctors.
+                    </p>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+                        {doctors.map((doctor) => (
+                            <DoctorCard
+                                id={doctor.id}
+                                key={doctor.id}
+                                name={doctor.name}
+                                specialty={doctor.specialty}
+                                email={doctor.email}
+                            />
+                        ))}
+                    </div>
+                )}
+            </main>
+
+            {typeof window !== 'undefined' && (() => {
+                const width = window.innerWidth;
+                const cols = width >= 1024 ? 4 : width >= 768 ? 3 : width >= 640 ? 2 : 1;
+                const rows = Math.ceil(doctors.length / cols);
+                return rows === 3 ? (
+                    <div className="flex justify-center py-4">
+                        <PaginationDemo />
+                    </div>
+                ) : null;
+            })()}
         </div>
     )
 }

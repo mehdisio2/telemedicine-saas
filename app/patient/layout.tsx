@@ -10,10 +10,7 @@ interface PatientLayoutProps {
 export default function PatientLayout({ children }: PatientLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Top navigation bar */}
-      <NavBar />
-
-      {/* Page content */}
+          <NavBar />
       <main className="flex-1 p-4">
         {children}
       </main>
