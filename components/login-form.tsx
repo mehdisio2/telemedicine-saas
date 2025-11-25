@@ -49,39 +49,72 @@ export function LoginForm() {
   return (
     <form onSubmit={handleLogin} className="flex flex-col gap-6">
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
-          <p className="text-muted-foreground text-sm text-balance">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-2xl font-semibold text-[#111111]">
+            Login to your account
+          </h1>
+          <p className="text-sm font-light text-[#888888] text-balance">
             Enter your email below to login to your account
           </p>
         </div>
 
         <Field>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" name="email" type="email" placeholder="m@example.com" required />
+          <FieldLabel
+            htmlFor="email"
+            className="text-sm font-medium text-[#4A4A4A]"
+          >
+            Email
+          </FieldLabel>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+            className="h-10 border-[#E5E5E5] rounded-lg focus:ring-2 focus:ring-[#2AB3A3] focus:border-[#2AB3A3] text-[#111111] placeholder:text-[#888888]"
+          />
         </Field>
 
         <Field>
           <div className="flex items-center">
-            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <FieldLabel
+              htmlFor="password"
+              className="text-sm font-medium text-[#4A4A4A]"
+            >
+              Password
+            </FieldLabel>
             <a
               href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
+              className="ml-auto text-sm text-[#2AB3A3] hover:text-[#1F8478] underline-offset-4 hover:underline font-normal"
             >
               Forgot your password?
             </a>
           </div>
-          <Input id="password" name="password" type="password" required />
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            className="h-10 border-[#E5E5E5] rounded-lg focus:ring-2 focus:ring-[#2AB3A3] focus:border-[#2AB3A3] text-[#111111]"
+          />
         </Field>
 
         <Field>
-          <Button type="submit">Login</Button>
+          <Button
+            type="submit"
+            className="w-full h-10 bg-[#2AB3A3] text-white font-medium rounded-lg hover:bg-[#1F8478] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:ring-offset-2 transition-colors"
+          >
+            Login
+          </Button>
         </Field>
 
         <Field>
-          <FieldDescription className="text-center">
+          <FieldDescription className="text-center text-sm font-light text-[#888888]">
             Don&apos;t have an account?{" "}
-            <a href="/signup" className="underline underline-offset-4">
+            <a
+              href="/signup"
+              className="text-[#2AB3A3] hover:text-[#1F8478] underline underline-offset-4 font-normal"
+            >
               Sign up
             </a>
           </FieldDescription>

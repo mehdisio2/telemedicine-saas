@@ -23,7 +23,7 @@ const defaultSpecialties = [
     "Radiology",
 ];
 
-const   SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch, className }) => {
+const SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch, className }) => {
     const [specialty, setSpecialty] = useState<string>("");
     const [date, setDate] = useState<string>("");
 
@@ -40,14 +40,14 @@ const   SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch,
 
     return (
         <form
-            className={`flex flex-wrap items-center gap-3 p-3 rounded-md ${className ?? ""}`}
+            className={`flex flex-wrap items-end gap-4 p-5 bg-white border border-[#E5E5E5] rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${className ?? ""}`}
             onSubmit={(e) => {
                 e.preventDefault();
                 handleSearch();
             }}
         >
-            <div className="flex flex-col">
-                <label htmlFor="specialty-input" className="text-sm mb-1">
+            <div className="flex flex-col gap-2">
+                <label htmlFor="specialty-input" className="text-sm font-medium text-[#4A4A4A]">
                     Doctor specialty
                 </label>
                 <input
@@ -56,7 +56,7 @@ const   SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch,
                     value={specialty}
                     onChange={(e) => setSpecialty(e.target.value)}
                     placeholder="e.g. Cardiology"
-                    className="px-3 py-2 min-w-[180px] border rounded-md bg-transparent focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-current"
+                    className="px-3 py-2 h-10 min-w-[180px] border border-[#E5E5E5] rounded-lg bg-white text-[#111111] placeholder:text-[#888888] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:border-[#2AB3A3]"
                 />
                 <datalist id="specialties">
                     {specialties.map((s) => (
@@ -65,8 +65,8 @@ const   SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch,
                 </datalist>
             </div>
 
-            <div className="flex flex-col">
-                <label htmlFor="date-input" className="text-sm mb-1">
+            <div className="flex flex-col gap-2">
+                <label htmlFor="date-input" className="text-sm font-medium text-[#4A4A4A]">
                     Appointment date
                 </label>
                 <input
@@ -74,14 +74,14 @@ const   SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch,
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="px-3 py-2 border rounded-md bg-transparent focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-current"
+                    className="px-3 py-2 h-10 border border-[#E5E5E5] rounded-lg bg-white text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:border-[#2AB3A3]"
                 />
             </div>
 
-            <div className="ml-auto flex gap-2">
+            <div className="ml-auto flex gap-3">
                 <button
                     type="submit"
-                    className="px-3 py-2 rounded-md font-semibold text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-600"
+                    className="px-4 py-2 h-10 rounded-lg font-medium text-white bg-[#2AB3A3] hover:bg-[#1F8478] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:ring-offset-2 transition-colors"
                 >
                     Search
                 </button>
@@ -89,7 +89,7 @@ const   SearchFilter: FC<Props> = ({ specialties = defaultSpecialties, onSearch,
                 <button
                     type="button"
                     onClick={handleClear}
-                    className="px-3 py-2 rounded-md font-semibold border bg-white text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-300"
+                    className="px-4 py-2 h-10 rounded-lg font-medium border border-[#2AB3A3] bg-white text-[#2AB3A3] hover:bg-[#E6F9F0] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:ring-offset-2 transition-colors"
                 >
                     Clear
                 </button>

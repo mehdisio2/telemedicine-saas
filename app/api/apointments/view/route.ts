@@ -15,7 +15,7 @@ export async function GET() {
 
   const { data: appointments, error: fetchError } = await supabase
     .from("appointments")
-    .select("id, datetime, description, doctor_id")
+    .select("id, datetime, description, doctor_id, status")
     .eq("patient_id", user.id)
     .order("datetime", { ascending: true });
 
@@ -47,6 +47,7 @@ export async function GET() {
     description: apt.description,
     doctorName: doctorMap.get(apt.doctor_id)?.name || "Unknown",
     doctorSpecialty: doctorMap.get(apt.doctor_id)?.specialty || "",
+    status: apt.status || "scheduled" // Adjust based on your schema
   }));
 
   return NextResponse.json({ appointments: formattedAppointments });

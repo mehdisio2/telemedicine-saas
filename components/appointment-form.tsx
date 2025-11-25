@@ -53,30 +53,39 @@ export function AppointmentForm({ doctorId }: AppointmentFormProps) {
   return (
     <div className="mt-4">
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Date</label>
+        <div className="space-y-2">
+          <label htmlFor="date-input" className="block text-sm font-medium text-[#4A4A4A]">
+            Date
+          </label>
           <input
+            id="date-input"
             type="date"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            className="block w-full border border-[#E5E5E5] rounded-lg px-3 py-2 h-10 bg-white text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:border-[#2AB3A3]"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Time</label>
+        <div className="space-y-2">
+          <label htmlFor="time-input" className="block text-sm font-medium text-[#4A4A4A]">
+            Time
+          </label>
           <input
+            id="time-input"
             type="time"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            className="block w-full border border-[#E5E5E5] rounded-lg px-3 py-2 h-10 bg-white text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:border-[#2AB3A3]"
             value={time}
             onChange={(e) => setTime(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Reason for Visit</label>
+        <div className="space-y-2">
+          <label htmlFor="description-input" className="block text-sm font-medium text-[#4A4A4A]">
+            Reason for Visit
+          </label>
           <textarea
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            id="description-input"
+            className="block w-full border border-[#E5E5E5] rounded-lg px-3 py-2 bg-white text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:border-[#2AB3A3] resize-none"
             rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -84,12 +93,17 @@ export function AppointmentForm({ doctorId }: AppointmentFormProps) {
         </div>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          className="w-full px-4 py-2 h-10 bg-[#2AB3A3] text-white font-medium rounded-lg hover:bg-[#1F8478] focus:outline-none focus:ring-2 focus:ring-[#2AB3A3] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={loading}
         >
           {loading ? "Booking..." : "Book Appointment"}
         </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {error && (
+          <p className="text-sm text-[#D9534F] font-normal mt-2">{error}</p>
+        )}
+        {success && (
+          <p className="text-sm text-[#4CAF50] font-normal mt-2">Appointment booked successfully!</p>
+        )}
       </form>
     </div>
   );
