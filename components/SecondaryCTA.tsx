@@ -19,7 +19,7 @@ export default function SecondaryCTA() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/book">
+            <Link href="/signup">
               <Button className="bg-[#2AB3A3] hover:bg-[#1F8478] text-white h-11 px-6 rounded-lg shadow-sm hover:shadow-md">
                 Book Appointment
               </Button>
