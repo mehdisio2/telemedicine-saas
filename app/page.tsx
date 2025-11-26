@@ -26,7 +26,7 @@ export default function Home() {
                   Access top medical professionals from the comfort of your home.
                 </p>
                 <div className="pt-2">
-                  <Link href="/book">
+                  <Link href="/signup">
                     <Button className="bg-[#2AB3A3] hover:bg-[#1F8478] text-white px-8 h-11 text-base font-medium rounded-lg transition-colors shadow-sm hover:shadow-md">
                       Book Appointment
                     </Button>
