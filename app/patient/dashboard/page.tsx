@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState, useMemo } from "react"
-import UpcomingAppointment from "@/components/upcoming-apointment"
 import Appointments from "@/components/appointments"
 
 interface Appointment {
