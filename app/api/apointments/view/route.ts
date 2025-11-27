@@ -26,11 +26,14 @@ export async function GET() {
   // Get all unique doctor IDs
   const doctorIds = [...new Set(appointments?.map(apt => apt.doctor_id))];
 
+
   // Fetch doctor profiles
   const { data: doctors, error: doctorError } = await supabase
-    .from("profiles")
-    .select("id, name, specialty")
+    .from("doctors")
+    .select("id, full_name, specialty")
     .in("id", doctorIds);
+
+
 
   if (doctorError) {
     return NextResponse.json({ error: doctorError.message }, { status: 400 });
@@ -39,13 +42,14 @@ export async function GET() {
   // Create a map for quick lookup
   const doctorMap = new Map(doctors?.map(doc => [doc.id, doc]));
 
+
   // Transform the data
   const formattedAppointments = appointments?.map(apt => ({
     id: apt.id,
     date: new Date(apt.datetime).toLocaleDateString(),
     time: new Date(apt.datetime).toLocaleTimeString(),
     description: apt.description,
-    doctorName: doctorMap.get(apt.doctor_id)?.name || "Unknown",
+    doctorName: doctorMap.get(apt.doctor_id)?.full_name || "Unknown",
     doctorSpecialty: doctorMap.get(apt.doctor_id)?.specialty || "",
     status: apt.status || "scheduled" // Adjust based on your schema
   }));

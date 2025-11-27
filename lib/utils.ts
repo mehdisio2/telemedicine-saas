@@ -9,7 +9,6 @@ export function cn(...inputs: ClassValue[]) {
 export async function signUpUser(
   email: string,
   password: string,
-  role: "patient" | "doctor",
   name: string
 ) {
   const supabase = createClient();
@@ -25,12 +24,11 @@ export async function signUpUser(
   if (!user) throw new Error("User was not created");
 
   const { error: profileError } = await supabase
-    .from("profiles")
+    .from("patients")
     .insert([
       {
         id: user.id,
         email: user.email,
-        role,
         name,
       },
     ]);
@@ -53,7 +51,7 @@ export async function loginUser(email: string, password: string) {
 
   // Query your profiles table using the authenticated user's id
   const { data: profile, error: profileError } = await supabase
-    .from("profiles")
+    .from("patients")
     .select("*")
     .eq("id", user.id)
     .single();
@@ -69,7 +67,7 @@ export async function getDoctorsBySpecialty({ specialty }: { specialty: string }
   console.log("Fetching doctors with specialty:", specialty);
   const supabase = createClient();
   const { data, error } = await supabase
-    .from('profiles')
+    .from('doctors')
     .select('id, name, email, specialty')
     .eq('role', 'doctor')
     .eq('specialty', specialty);

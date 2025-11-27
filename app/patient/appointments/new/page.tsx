@@ -7,8 +7,7 @@ import { PaginationDemo } from "@/components/pagination"
 
 type Doctor = {
     id: string;
-    name: string;
-    email: string;
+    full_name: string;
     specialty: string;
 }
 
@@ -19,9 +18,8 @@ export default function NewAppointmentPage() {
         const fetchInitialDoctors = async () => {
             const supabase = createClient();
             const { data, error } = await supabase
-                .from("profiles")
-                .select("id, name, email, specialty")
-                .eq("role", "doctor")
+                .from("doctors")
+                .select("id, full_name, specialty")
                 .limit(9);
 
             if (error) {
@@ -38,9 +36,8 @@ export default function NewAppointmentPage() {
     const handleSearch = async (filters: { specialty: string; date: string }) => {
         const supabase = createClient();
         let query = supabase
-            .from("profiles")
-            .select("id, name, email, specialty")
-            .eq("role", "doctor");
+            .from("doctors")
+            .select("id, full_name, specialty");
 
         if (filters.specialty) {
             query = query.eq("specialty", filters.specialty);

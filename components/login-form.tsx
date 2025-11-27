@@ -28,19 +28,10 @@ export function LoginForm() {
         console.error("User not found");
         return;
       }
+      
       console.log("Logged in user:", user);
-      switch (user.role) {
-        case "patient":
-          router.push("/patient/dashboard");
-          break;
-
-        case "doctor":
-          router.push("/doctor/dashboard");
-          break;
-
-        default:
-          router.push("/");
-      }
+      router.push("/patient/dashboard");
+ 
     } catch (error) {
       console.error("Error logging in:", error);
     }

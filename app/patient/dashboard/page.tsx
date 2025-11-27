@@ -28,8 +28,10 @@ export default function PatientPage() {
         headers: { "Content-Type": "application/json" },
         cache: "no-store",
       })
+      console.log("Appointments response status:", res.status)
       if (!res.ok) throw new Error("Failed to fetch appointments")
       const data = await res.json()
+    console.log("Fetched appointments data:", data)
       setAppointments(data.appointments || [])
     } catch (e: any) {
       setError(e.message || "Error loading appointments")

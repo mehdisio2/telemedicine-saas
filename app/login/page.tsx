@@ -48,15 +48,6 @@ export default function LoginPage() {
             </div>
 
             {/* Secondary text */}
-            <p className="mt-4 text-center text-sm text-[#4A4A4A]">
-              New here?{" "}
-              <Link
-                href="/signup"
-                className="text-[#1F8478] hover:text-[#2AB3A3] font-medium"
-              >
-                Create an account
-              </Link>
-            </p>
           </div>
         </div>
       </div>

@@ -15,13 +15,12 @@ import {
 } from "@/components/ui/dialog";
 
 export type DoctorCardProps = {
-  name: string;
+  full_name: string;
   specialty: string;
-  email: string;
   doctorId: string;
 };
 
-export function AppointmentDialog({ name, specialty, email, doctorId }: DoctorCardProps) {
+export function AppointmentDialog({ full_name, specialty, doctorId }: DoctorCardProps) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
@@ -76,12 +75,10 @@ export function AppointmentDialog({ name, specialty, email, doctorId }: DoctorCa
       <DialogContent className="bg-white border border-[#E5E5E5] rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.12)]">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-[#111111]">
-            Book Appointment with Dr. {name}
+            Book Appointment with Dr. {full_name}
           </DialogTitle>
           <DialogDescription className="text-sm font-light text-[#888888]">
             Specialty: {specialty}
-            <br />
-            Email: {email}
           </DialogDescription>
         </DialogHeader>
 
