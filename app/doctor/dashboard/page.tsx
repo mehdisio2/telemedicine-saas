@@ -1,21 +1,18 @@
 "use client"
 
 import { useEffect, useState, useMemo } from "react"
-import UpcomingAppointment from "@/components/upcoming-apointment"
 import Appointments from "@/components/appointments"
 
-interface Appointment {
+interface DoctorAppointment {
   id: string;
   date: string;
   time: string;
-  doctorName: string;
-  doctorSpecialty: string;
-  description: string;
+  patientName: string;
   status?: string;
 }
 
-export default function PatientPage() {
-  const [appointments, setAppointments] = useState<Appointment[]>([])
+export default function DoctorPage() {
+  const [appointments, setAppointments] = useState<DoctorAppointment[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -23,7 +20,7 @@ export default function PatientPage() {
     try {
       setLoading(true)
       setError(null)
-      const res = await fetch("/api/apointments/patientView", {
+      const res = await fetch("/api/apointments/doctorView", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         cache: "no-store",
