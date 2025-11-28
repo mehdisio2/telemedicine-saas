@@ -17,6 +17,7 @@ import {
 import { UserCircle, Stethoscope, FileCheck, Check, LoaderCircleIcon, Eye } from 'lucide-react'
 import { SignupForm } from '@/components/signup-form1'
 import { ProfessionalDetailsForm } from '@/components/professional-details-form'
+import { IdentityVerificationForm } from '@/components/identity-verification-form'
 
 const steps = [
   { title: 'Basic Account Information', icon: UserCircle },
@@ -115,10 +116,7 @@ export default function DoctorSignupPage() {
                     
                     {index === 2 && (
                       // Step 3: Identity Verification Uploads
-                      <div className="space-y-4">
-                        {/* Add file upload components for ID, certificates, etc. */}
-                        <p className="text-sm text-[#888888]">File upload components for ID, medical license, certificates here</p>
-                      </div>
+                      <IdentityVerificationForm />
                     )}
                     
                     {index === 3 && (
