@@ -47,7 +47,7 @@ export default function SignupPage() {
           sizes="50vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#E6F9F0]/60 via-transparent to-[#2AB3A3]/20" />
+        <div className="absolute inset-0 bg-linear-to-br from-[#E6F9F0]/60 via-transparent to-[#2AB3A3]/20" />
       </div>
     </div>
   )

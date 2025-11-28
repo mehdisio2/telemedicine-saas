@@ -51,10 +51,6 @@ export function SignupForm() {
   return (
     <form onSubmit={handleSignup} className="flex flex-col gap-6">
       <FieldGroup className="rounded-xl border border-gray-200/60 bg-white/80 backdrop-blur-sm p-6 md:p-8 shadow-sm">
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-semibold text-[#111111]">Create your account</h1>
-          <p className="text-sm text-[#4A4A4A]">Fill in the form below to get started</p>
-        </div>
 
         {error && (
           <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm px-3 py-2">
