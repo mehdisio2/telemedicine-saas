@@ -1,7 +1,6 @@
 "use client";
 
 import { FileText, X } from "lucide-react";
-import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,32 +8,44 @@ import { Label } from "@/components/ui/label";
 
 export const title = "File Upload with List";
 
-const FileInput = () => {
-  const [files, setFiles] = useState<File[]>([]);
+interface FileInputProps {
+  data?: File[];
+  onUpdate: (files: File[]) => void;
+  id?: string;
+  label?: string;
+  multiple?: boolean;
+}
 
+const FileInput = ({
+  data = [],
+  onUpdate,
+  id = "file-upload",
+  label = "Upload Files",
+  multiple = true,
+}: FileInputProps) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFiles(Array.from(e.target.files));
+      onUpdate(Array.from(e.target.files));
     }
   };
 
   const removeFile = (index: number) => {
-    setFiles(files.filter((_, i) => i !== index));
+    onUpdate(data.filter((_, i) => i !== index));
   };
 
   return (
     <div className="w-full max-w-sm space-y-2">
-      <Label htmlFor="file-upload">Upload Files</Label>
+      <Label htmlFor={id}>{label}</Label>
       <Input
         className="bg-background"
-        id="file-upload"
-        multiple
+        id={id}
+        multiple={multiple}
         onChange={handleFileChange}
         type="file"
       />
-      {files.length > 0 && (
+      {data.length > 0 && (
         <div className="space-y-2">
-          {files.map((file, index) => (
+          {data.map((file, index) => (
             <div
               className="flex items-center justify-between rounded-md border p-2"
               key={index}

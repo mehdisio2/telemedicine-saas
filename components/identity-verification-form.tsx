@@ -9,7 +9,15 @@ import {
 } from "@/components/ui/field"
 import FileInput from "./ui/input-special-1"
 
-export function IdentityVerificationForm() {
+interface IdentityVerificationFormProps {
+  data: {
+    nationalIdFiles?: File[];
+    medicalLicenseFiles?: File[];
+  };
+  onUpdate: (field: string, value: File[]) => void;
+}
+
+export function IdentityVerificationForm({ data, onUpdate }: IdentityVerificationFormProps) {
   return (
     <form>
       <FieldGroup>
@@ -22,7 +30,11 @@ export function IdentityVerificationForm() {
               <FieldDescription>
                 Upload front and back of your national ID card (max 10MB per file)
               </FieldDescription>
-              <FileInput />
+              <FileInput 
+                id="national-id-upload"
+                data={data.nationalIdFiles}
+                onUpdate={(files) => onUpdate("nationalIdFiles", files)}
+              />
             </Field>
 
             <Field>
@@ -32,7 +44,11 @@ export function IdentityVerificationForm() {
               <FieldDescription>
                 Upload your valid medical license document (max 10MB per file)
               </FieldDescription>
-              <FileInput />
+              <FileInput 
+                id="medical-license-upload"
+                data={data.medicalLicenseFiles}
+                onUpdate={(files) => onUpdate("medicalLicenseFiles", files)}
+              />
             </Field>
           </FieldGroup>
         </FieldSet>
