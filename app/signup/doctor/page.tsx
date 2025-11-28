@@ -19,6 +19,30 @@ import { SignupForm } from '@/components/signup-form1'
 import { ProfessionalDetailsForm } from '@/components/professional-details-form'
 import { IdentityVerificationForm } from '@/components/identity-verification-form'
 
+// Type definitions
+type BasicInfo = {
+  full_name: string
+  email: string
+  password: string
+}
+
+type ProfessionalInfo = {
+  specialty: string
+  license_number: string
+  identity_card_number: string
+}
+
+type IdentityInfo = {
+  national_id_card: File | null
+  medical_license: File | null
+}
+
+type DoctorFormData = {
+  basicInfo: BasicInfo
+  professionalInfo: ProfessionalInfo
+  identityInfo: IdentityInfo
+}
+
 const steps = [
   { title: 'Basic Account Information', icon: UserCircle },
   { title: 'Professional Details', icon: Stethoscope },
@@ -28,6 +52,46 @@ const steps = [
 
 export default function DoctorSignupPage() {
   const [currentStep, setCurrentStep] = useState(1)
+  
+  // Centralized form data state
+  const [formData, setFormData] = useState<DoctorFormData>({
+    basicInfo: {
+      full_name: '',
+      email: '',
+      password: '',
+    },
+    professionalInfo: {
+      specialty: '',
+      license_number: '',
+      identity_card_number: '',
+    },
+    identityInfo: {
+      national_id_card: null,
+      medical_license: null,
+    },
+  })
+
+  // Update handlers for each section
+  const updateBasicInfo = (data: Partial<BasicInfo>) => {
+    setFormData(prev => ({
+      ...prev,
+      basicInfo: { ...prev.basicInfo, ...data }
+    }))
+  }
+
+  const updateProfessionalInfo = (data: Partial<ProfessionalInfo>) => {
+    setFormData(prev => ({
+      ...prev,
+      professionalInfo: { ...prev.professionalInfo, ...data }
+    }))
+  }
+
+  const updateIdentityInfo = (data: Partial<IdentityInfo>) => {
+    setFormData(prev => ({
+      ...prev,
+      identityInfo: { ...prev.identityInfo, ...data }
+    }))
+  }
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] py-12">
@@ -103,26 +167,29 @@ export default function DoctorSignupPage() {
                 <div className="rounded-xl  p-6 ">
                   <h2 className="text-xl font-semibold text-[#111111] mb-4">{step.title}</h2>
                   <div className="text-[#4A4A4A]">
-                    {/* Replace this section with your actual form content */}
                     {index === 0 && (
-                      // Step 1: Basic Account Information
-                        <SignupForm />
+                      <SignupForm 
+                        data={formData.basicInfo}
+                        onUpdate={updateBasicInfo}
+                      />
                     )}
                     
                     {index === 1 && (
-                        // Step 2: Professional Details
-                        <ProfessionalDetailsForm />
+                      <ProfessionalDetailsForm 
+                          data={formData.professionalInfo}
+                        onUpdate={updateProfessionalInfo}
+                      />
                     )}
                     
                     {index === 2 && (
-                      // Step 3: Identity Verification Uploads
-                      <IdentityVerificationForm />
+                      <IdentityVerificationForm 
+                        /*data={formData.identityInfo}
+                        onUpdate={updateIdentityInfo} */
+                      />
                     )}
                     
                     {index === 3 && (
-                      // Step 4: Review & Submit
                       <div className="space-y-4">
-                        {/* Display summary of all entered information */}
                         <p className="text-sm text-[#888888]">Review summary of all information here</p>
                       </div>
                     )}

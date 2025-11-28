@@ -12,9 +12,24 @@ import {
 import { Input } from "@/components/ui/input"
 import { signUpUser } from "@/lib/utils"
 
-export function SignupForm() {
+type BasicInfo = {
+  full_name: string
+  email: string
+  password: string
+}
+
+interface SignupFormProps {
+  data: BasicInfo
+  onUpdate: (data: Partial<BasicInfo>) => void
+}
+
+export function SignupForm({ data, onUpdate }: SignupFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  const handleFieldChange = (field: keyof BasicInfo, value: string) => {
+    onUpdate({ [field]: value })
+  }
 
   const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -66,6 +81,8 @@ export function SignupForm() {
             type="text"
             placeholder="John Doe"
             required
+            value={data.full_name}
+            onChange={(e) => handleFieldChange("full_name", e.target.value)}
             className="bg-white/90 border-gray-200/60 rounded-lg focus-visible:ring-2 focus-visible:ring-[#2AB3A3] focus-visible:border-[#2AB3A3]"
           />
         </Field>
@@ -78,6 +95,8 @@ export function SignupForm() {
             type="email"
             placeholder="m@example.com"
             required
+            value={data.email}
+            onChange={(e) => handleFieldChange("email", e.target.value)}
             className="bg-white/90 border-gray-200/60 rounded-lg focus-visible:ring-2 focus-visible:ring-[#2AB3A3] focus-visible:border-[#2AB3A3]"
           />
         </Field>
@@ -89,6 +108,8 @@ export function SignupForm() {
             name="password"
             type="password"
             required
+            value={data.password}
+            onChange={(e) => handleFieldChange("password", e.target.value)}
             className="bg-white/90 border-gray-200/60 rounded-lg focus-visible:ring-2 focus-visible:ring-[#2AB3A3] focus-visible:border-[#2AB3A3]"
           />
           <FieldDescription className="text-[#4A4A4A]">Must be at least 8 characters long.</FieldDescription>

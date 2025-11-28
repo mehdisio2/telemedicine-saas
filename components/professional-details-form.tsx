@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldDescription,
@@ -17,9 +16,24 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function ProfessionalDetailsForm() {
+type ProfessionalInfo = {
+  specialty: string
+  license_number: string
+  identity_card_number: string
+}
+
+interface ProfessionalDetailsFormProps {
+  data: ProfessionalInfo
+  onUpdate: (data: Partial<ProfessionalInfo>) => void
+}
+
+export function ProfessionalDetailsForm({ data, onUpdate }: ProfessionalDetailsFormProps) {
+  const handleFieldChange = (field: keyof ProfessionalInfo, value: string) => {
+    onUpdate({ [field]: value })
+  }
+
   return (
-    <form>
+    <div>
       <FieldGroup>
         <FieldSet>
           <FieldGroup>
@@ -27,7 +41,10 @@ export function ProfessionalDetailsForm() {
               <FieldLabel htmlFor="specialty">
                 Medical Specialty
               </FieldLabel>
-              <Select defaultValue="">
+              <Select 
+                value={data.specialty} 
+                onValueChange={(value) => handleFieldChange("specialty", value)}
+              >
                 <SelectTrigger id="specialty">
                   <SelectValue placeholder="Select your specialty" />
                 </SelectTrigger>
@@ -60,6 +77,8 @@ export function ProfessionalDetailsForm() {
                 name="license-number"
                 placeholder="e.g., MD123456"
                 required
+                value={data.license_number}
+                onChange={(e) => handleFieldChange("license_number", e.target.value)}
               />
               <FieldDescription>
                 Enter your valid medical license number
@@ -74,6 +93,8 @@ export function ProfessionalDetailsForm() {
                 name="national-id"
                 placeholder="e.g., 1234567890"
                 required
+                value={data.identity_card_number}
+                onChange={(e) => handleFieldChange("identity_card_number", e.target.value)}
               />
               <FieldDescription>
                 Enter your national identification number
@@ -82,6 +103,6 @@ export function ProfessionalDetailsForm() {
           </FieldGroup>
         </FieldSet>
       </FieldGroup>
-    </form>
+    </div>
   )
 }
