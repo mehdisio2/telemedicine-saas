@@ -1,6 +1,6 @@
 'use client'
 import SearchFilter from "@/components/search-filter"
-import { createClient } from "@/lib/supabaseClient"
+import { createClient } from "@/lib/supabase/client"
 import { useState, useEffect } from "react"
 import { DoctorCard } from "@/components/doctor-card"
 import { PaginationDemo } from "@/components/pagination"
