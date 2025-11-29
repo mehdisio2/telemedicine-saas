@@ -127,24 +127,6 @@ export function SignupForm({ data, onUpdate }: SignupFormProps) {
           <FieldDescription className="text-[#4A4A4A]">Please confirm your password.</FieldDescription>
         </Field>
 
-        <Field>
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full h-11 rounded-lg bg-[#2AB3A3] hover:bg-[#1F8478] text-white font-medium shadow-sm hover:shadow-md transition"
-          >
-            {loading ? "Creating..." : "Create Account"}
-          </Button>
-        </Field>
-
-        <FieldSeparator>Or continue with</FieldSeparator>
-
-        <Field>
-          <FieldDescription className="px-6 text-center text-[#4A4A4A]">
-            Already have an account?{" "}
-            <a href="/login" className="text-[#1F8478] hover:text-[#2AB3A3] font-medium">Sign in</a>
-          </FieldDescription>
-        </Field>
       </FieldGroup>
     </form>
   )
