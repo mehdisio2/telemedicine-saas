@@ -154,7 +154,7 @@ export default function DoctorSignupPage() {
 
       toast.success('Registration successful. Verify your email.')
       console.log('🎉 Submission complete')
-      router.push('/signup/success')
+      router.push('/doctor/dashboard')
     } catch (err: any) {
       console.error('🛑 Submission failed:', {
         message: err.message,
