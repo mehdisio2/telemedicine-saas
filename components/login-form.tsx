@@ -28,19 +28,36 @@ export function LoginForm() {
         console.error("User not found");
         return;
       }
-      
+
       console.log("Logged in user:", user);
-      router.push("/patient/dashboard");
- 
+      router.push("patient/dashboard");
+      router.refresh();
     } catch (error) {
       console.error("Error logging in:", error);
     }
+
+    // If you later use role-based redirect, ensure this stays inside handleLogin and is awaited.
+    /*
+    const roleResult = await getUserRole();
+
+    if (roleResult.role === "patient") {
+      router.push("/patient/dashboard");
+    } else if (roleResult.role === "doctor") {
+      if (roleResult.status === "pending") {
+        router.push("/doctor/verification-pending");
+      } else if (roleResult.status === "approved") {
+        router.push("/doctor/dashboard");
+      }
+    } else {
+      router.push("/login");
+    }
+    router.refresh();
+    */
   };
 
   return (
     <form onSubmit={handleLogin} className="flex flex-col gap-6">
       <FieldGroup>
-
         <Field>
           <FieldLabel
             htmlFor="email"
