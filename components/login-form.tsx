@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginUser } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { fetchUserRole } from "@/lib/utils";
 
 export function LoginForm() {
   const router = useRouter();
@@ -37,22 +38,16 @@ export function LoginForm() {
     }
 
     // If you later use role-based redirect, ensure this stays inside handleLogin and is awaited.
-    /*
-    const roleResult = await getUserRole();
-
-    if (roleResult.role === "patient") {
+    const userRole = await fetchUserRole();
+    if (userRole.role === "patient") {
       router.push("/patient/dashboard");
-    } else if (roleResult.role === "doctor") {
-      if (roleResult.status === "pending") {
-        router.push("/doctor/verification-pending");
-      } else if (roleResult.status === "approved") {
-        router.push("/doctor/dashboard");
-      }
+    } else if (userRole.role === "doctor" && userRole.status === "approved") {
+      router.push("/doctor/dashboard");
+    } else if (userRole.role === "doctor" && userRole.status === "pending") {
+      router.push("/doctor/verification-pending");  
     } else {
       router.push("/login");
     }
-    router.refresh();
-    */
   };
 
   return (

@@ -75,3 +75,8 @@ export async function getDoctorsBySpecialty({ specialty }: { specialty: string }
   if (error) throw error;
   return data ?? [];
 }
+
+export async function fetchUserRole() {
+  const res = await fetch("/api/user/role");
+  return res.json();
+}

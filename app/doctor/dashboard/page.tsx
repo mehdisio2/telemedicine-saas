@@ -52,7 +52,7 @@ export default function DoctorPage() {
     <div className="min-h-screen bg-[#F9FAFB]">
       <div className="container mx-auto max-w-7xl px-4 md:px-6 py-8 space-y-6">
         <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-[#111111]">Patient Dashboard</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-[#111111]">Doctor Dashboard</h1>
           <p className="text-sm font-light text-[#888888]">
             Review upcoming and past appointments.
           </p>
