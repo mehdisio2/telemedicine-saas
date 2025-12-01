@@ -11,11 +11,12 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { signUpUser } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 export function SignupForm() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-
+  const router = useRouter()
   const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError(null)
@@ -24,7 +25,6 @@ export function SignupForm() {
     const email = formData.get("email") as string
     const password = formData.get("password") as string
     const confirm = formData.get("confirm-password") as string
-    const role = formData.get("role") as "patient" | "doctor"
     const name = formData.get("name") as string
 
     if (password !== confirm) {
@@ -38,8 +38,10 @@ export function SignupForm() {
 
     try {
       setLoading(true)
-      await signUpUser(email, password, name)
-      // Redirect or show success toast
+      const user = await signUpUser(email, password, name)
+      console.log("Signed up user:", user)
+      // Redirect or show success toast here
+      router.push("/patient/dashboard")
     } catch (e) {
       setError("Unable to create account. Please try again.")
       console.error(e)

@@ -25,10 +25,15 @@ export default function Home() {
                 <p className="text-lg lg:text-xl text-[#4A4A4A] leading-relaxed">
                   Access top medical professionals from the comfort of your home.
                 </p>
-                <div className="pt-2">
-                  <Link href="/signup">
-                    <Button className="bg-[#2AB3A3] hover:bg-[#1F8478] text-white px-8 h-11 text-base font-medium rounded-lg transition-colors shadow-sm hover:shadow-md">
+                <div className="pt-2 flex flex-col sm:flex-row gap-4">
+                  <Link href="signup/patient">
+                    <Button className="bg-[#2AB3A3] hover:bg-[#1F8478] text-white px-8 h-11 text-base font-medium rounded-lg transition-colors shadow-sm hover:shadow-md w-full sm:w-auto">
                       Book Appointment
+                    </Button>
+                  </Link>
+                  <Link href="/signup/doctor">
+                    <Button variant="outline" className="border-[#2AB3A3] text-[#2AB3A3] hover:bg-[#E6F9F0] px-8 h-11 text-base font-medium rounded-lg transition-colors w-full sm:w-auto">
+                      Join as Doctor
                     </Button>
                   </Link>
                 </div>

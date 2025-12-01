@@ -1,101 +1,94 @@
-"use client"
+import { PatientSidebar } from "@/components/patient/sidebar";
+import { PatientHealthRecordsCard } from "@/components/patient/health-records-card";
+import { BookAppointmentCTA } from "@/components/patient/book-appointment-cta";
+import { UpcomingAppointmentsList } from "@/components/patient/upcoming-appointments-list";
+import { PastAppointmentsList } from "@/components/patient/past-appointments-list";
 
-import { useEffect, useState, useMemo } from "react"
-import Appointments from "@/components/appointments"
-
-interface Appointment {
-  id: string;
-  date: string;
-  time: string;
-  doctorName: string;
-  doctorSpecialty: string;
-  description: string;
-  status?: string;
-}
-
-export default function PatientPage() {
-  const [appointments, setAppointments] = useState<Appointment[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const getAppointments = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const res = await fetch("/api/apointments/patientView", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        cache: "no-store",
-      })
-      console.log("Appointments response status:", res.status)
-      if (!res.ok) throw new Error("Failed to fetch appointments")
-      const data = await res.json()
-    console.log("Fetched appointments data:", data)
-      setAppointments(data.appointments || [])
-    } catch (e: any) {
-      setError(e.message || "Error loading appointments")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    getAppointments()
-  }, [])
-
-  const { pastAppointments, upcomingAppointments } = useMemo(() => {
-    return {
-      pastAppointments: appointments.filter(a => a.status?.toLowerCase() === "completed"),
-      upcomingAppointments: appointments.filter(a => a.status?.toLowerCase() === "scheduled"),
-    }
-  }, [appointments])
-
+export default function PatientDashboard() {
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="container mx-auto max-w-7xl px-4 md:px-6 py-8 space-y-6">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-[#111111]">Patient Dashboard</h1>
-          <p className="text-sm font-light text-[#888888]">
-            Review upcoming and past appointments.
-          </p>
-        </header>
-        
-        {error && (
-          <div className="rounded-xl border border-[#D9534F]/30 bg-[#D9534F]/10 px-5 py-4 text-sm text-[#D9534F] font-normal">
-            {error}
+    <div className="flex bg-[#F9FAFB]">
+      {/* Sidebar - full height */}
+      <PatientSidebar />
+      
+      {/* Main content area */}
+      <main className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Page Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-semibold text-[#111111] mb-2">Dashboard</h1>
+            <p className="text-gray-600">Welcome back! Here's an overview of your health and appointments.</p>
           </div>
-        )}
-        
-        {loading && (
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="animate-pulse rounded-xl border border-[#E5E5E5] bg-white p-6 space-y-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-              <div className="h-5 w-1/2 bg-[#E5E5E5] rounded" />
-              <div className="h-3 w-3/4 bg-[#E5E5E5] rounded" />
-              <div className="h-24 w-full bg-[#E5E5E5] rounded" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="lg:col-span-2">
+              <PatientHealthRecordsCard
+                title="Health Records"
+                records={[
+                  { 
+                    label: "Heart Rate", 
+                    value: "140 Bpm", 
+                    icon: "heart", 
+                    percentage: "2%", 
+                    percentageColor: "text-green-600" 
+                  },
+                  { 
+                    label: "Body Temperature", 
+                    value: "37.5 C", 
+                    icon: "thermometer" 
+                  },
+                  { 
+                    label: "Glucose Level", 
+                    value: "70 - 90", 
+                    icon: "droplet", 
+                    percentage: "6%", 
+                    percentageColor: "text-red-600" 
+                  },
+                  { 
+                    label: "SPo2", 
+                    value: "96%", 
+                    icon: "activity" 
+                  },
+                  { 
+                    label: "Blood Pressure", 
+                    value: "100 mg/dl", 
+                    icon: "droplet", 
+                    percentage: "2%", 
+                    percentageColor: "text-green-600" 
+                  },
+                  { 
+                    label: "BMI", 
+                    value: "20.1 kg/m2", 
+                    icon: "scale" 
+                  },
+                ]}
+                overallHealth={95}
+                lastVisitDate="25 Mar 2025"
+              />
             </div>
-            <div className="animate-pulse rounded-xl border border-[#E5E5E5] bg-white p-6 space-y-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-              <div className="h-5 w-1/2 bg-[#E5E5E5] rounded" />
-              <div className="h-3 w-3/4 bg-[#E5E5E5] rounded" />
-              <div className="h-24 w-full bg-[#E5E5E5] rounded" />
-            </div>
+            <BookAppointmentCTA href="/patient/appointments/new" />
           </div>
-        )}
-        
-        {!loading && (
-          <div className="grid gap-6 md:grid-cols-2">
-            <Appointments
-              title="Past Appointments"
-              description="Completed visits."
-              appointments={pastAppointments}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Upcoming Appointments List - Bottom Left (extracted) */}
+            <UpcomingAppointmentsList
+              items={[
+                { doctor: "Dr. Sarah Smith", reason: "General Checkup", datetime: "December 5, 2025 - 10:00 AM" },
+                { doctor: "Dr. Michael Johnson", reason: "Cardiology Consultation", datetime: "December 12, 2025 - 2:30 PM" },
+                { doctor: "Dr. Emily Davis", reason: "Follow-up Visit", datetime: "December 18, 2025 - 11:00 AM" },
+              ]}
             />
-            <Appointments
-              title="Upcoming Appointments"
-              description="Scheduled visits."
-              appointments={upcomingAppointments}
+
+            {/* Past Appointments List - Bottom Right (extracted) */}
+            <PastAppointmentsList
+              items={[
+                { doctor: "Dr. Robert Brown", reason: "Annual Physical", datetime: "November 20, 2025 - 9:00 AM" },
+                { doctor: "Dr. Sarah Smith", reason: "Flu Vaccination", datetime: "October 15, 2025 - 3:00 PM" },
+                { doctor: "Dr. Michael Johnson", reason: "Blood Work Review", datetime: "September 28, 2025 - 1:00 PM" },
+              ]}
             />
           </div>
-        )}
-      </div>
+        </div>
+      </main>
     </div>
-  )
+  );
 }

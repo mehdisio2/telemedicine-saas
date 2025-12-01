@@ -1,42 +1,37 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-export function DoctorSidebar() {
-  const [availability, setAvailability] = useState<"available" | "unavailable">("available");
-
+/**
+ * PatientSidebar
+ * - Matches the doctor's sidebar styling (teal header, avatar overlap)
+ * - Shows patient name and ID
+ * - Bottom navigation: Appointments, Settings
+ */
+export function PatientSidebar() {
   return (
     <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
-      {/* Doctor Profile Card with Header Background */}
+      {/* Header with medical teal gradient and subtle pattern */}
       <div className="relative">
-        {/* Medical pattern background header */}
         <div className="h-32 bg-gradient-to-br from-[#2AB3A3] to-[#1F8478]">
-          {/* Optional: Add subtle medical icon pattern overlay */}
           <div className="absolute inset-0 opacity-10">
             <svg className="w-full h-full" viewBox="0 0 400 130">
-              <pattern id="medical-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              {/* Unique pattern id to avoid collisions */}
+              <pattern id="medical-pattern-patient" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
                 <path d="M20 10v10m-5-5h10" stroke="white" strokeWidth="2" fill="none" />
               </pattern>
-              <rect width="400" height="130" fill="url(#medical-pattern)" />
+              <rect width="400" height="130" fill="url(#medical-pattern-patient)" />
             </svg>
           </div>
         </div>
 
-        {/* Profile Avatar - Overlapping the header */}
+        {/* Avatar overlapping header */}
         <div className="absolute left-1/2 -translate-x-1/2 -bottom-14">
           <div className="relative">
             <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-200">
               <Image
-                src="/images/doctor-avatar.jpg"
-                alt="Doctor profile"
+                src="/images/patient-avatar.jpg"
+                alt="Patient profile"
                 width={112}
                 height={112}
                 className="object-cover w-full h-full"
@@ -52,54 +47,16 @@ export function DoctorSidebar() {
         </div>
       </div>
 
-      {/* Doctor Info Section */}
+      {/* Patient Info */}
       <div className="pt-16 pb-6 px-6 text-center border-b border-gray-200">
-        <h3 className="text-xl font-semibold text-[#111111]">Dr. John Doe</h3>
-        <p className="text-sm text-[#888888] mt-1">BDS, MDS - Cardiologist</p>
-        
-        {/* Specialty Badge */}
-        <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#E6F9F0] rounded-full">
-          <span className="w-2 h-2 bg-[#2AB3A3] rounded-full"></span>
-          <span className="text-sm font-medium text-[#2AB3A3]">Cardiologist</span>
-        </div>
-
-        {/* Availability Select */}
-        <div className="mt-4">
-          <Select value={availability} onValueChange={(val) => setAvailability(val as "available" | "unavailable")}>
-            <SelectTrigger className="w-full border-[#E5E5E5] focus:ring-2 focus:ring-[#2AB3A3]">
-              <SelectValue placeholder="Select availability" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="available">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  Available
-                </div>
-              </SelectItem>
-              <SelectItem value="unavailable">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
-                  Not Available
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <h3 className="text-xl font-semibold text-[#111111]">John Doe</h3>
+        <p className="text-sm text-[#888888] mt-1">Patient ID: #12345</p>
       </div>
 
-      {/* Navigation List */}
-      <nav className="flex-1 flex flex-col gap-2 p-6">
+      {/* Bottom Navigation */}
+      <nav className="flex-1 flex flex-col gap-2 p-6 mt-auto">
         <a
-          href="/doctor/dashboard"
-          className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#E6F9F0] text-[#2AB3A3] font-medium transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-          Dashboard
-        </a>
-        <a
-          href="/doctor/appointments"
+          href="/patient/appointments"
           className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#4A4A4A] hover:bg-gray-100 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
@@ -108,7 +65,7 @@ export function DoctorSidebar() {
           Appointments
         </a>
         <a
-          href="/doctor/settings"
+          href="/patient/settings"
           className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#4A4A4A] hover:bg-gray-100 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">

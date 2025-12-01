@@ -28,8 +28,7 @@ export async function signUpUser(
     .insert([
       {
         id: user.id,
-        email: user.email,
-        name,
+        full_name: name,
       },
     ]);
 

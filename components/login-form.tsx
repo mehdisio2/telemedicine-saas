@@ -31,8 +31,6 @@ export function LoginForm() {
       }
 
       console.log("Logged in user:", user);
-      router.push("patient/dashboard");
-      router.refresh();
     } catch (error) {
       console.error("Error logging in:", error);
     }
@@ -107,7 +105,7 @@ export function LoginForm() {
           <FieldDescription className="text-center text-sm font-light text-[#888888]">
             Don&apos;t have an account?{" "}
             <a
-              href="/signup"
+              href="/signup/patient"
               className="text-[#2AB3A3] hover:text-[#1F8478] underline underline-offset-4 font-normal"
             >
               Sign up

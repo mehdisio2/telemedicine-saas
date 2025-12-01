@@ -43,7 +43,7 @@ const statusStyles = {
 export function LatestAppointmentsCard({
   appointments = defaultAppointments,
   title = "Latest Appointments",
-  itemsPerPage = 4,
+  itemsPerPage = 6,
 }: LatestAppointmentsCardProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
