@@ -1,99 +1,179 @@
-"use client"
-
-import { useEffect, useState, useMemo } from "react"
-import Appointments from "@/components/appointments"
-
-interface DoctorAppointment {
-  id: string;
-  date: string;
-  time: string;
-  patientName: string;
-  status?: string;
-}
-
-export default function DoctorPage() {
-  const [appointments, setAppointments] = useState<DoctorAppointment[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const getAppointments = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const res = await fetch("/api/apointments/doctorView", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        cache: "no-store",
-      })
-      console.log("Appointments response status:", res.status)
-      if (!res.ok) throw new Error("Failed to fetch appointments")
-      const data = await res.json()
-    console.log("Fetched appointments data:", data)
-      setAppointments(data.appointments || [])
-    } catch (e: any) {
-      setError(e.message || "Error loading appointments")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    getAppointments()
-  }, [])
-
-  const { pastAppointments, upcomingAppointments } = useMemo(() => {
-    return {
-      pastAppointments: appointments.filter(a => a.status?.toLowerCase() === "completed"),
-      upcomingAppointments: appointments.filter(a => a.status?.toLowerCase() === "scheduled"),
-    }
-  }, [appointments])
-
+export default function DoctorDashboardPage() {
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="container mx-auto max-w-7xl px-4 md:px-6 py-8 space-y-6">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-[#111111]">Doctor Dashboard</h1>
-          <p className="text-sm font-light text-[#888888]">
-            Review upcoming and past appointments.
-          </p>
-        </header>
-        
-        {error && (
-          <div className="rounded-xl border border-[#D9534F]/30 bg-[#D9534F]/10 px-5 py-4 text-sm text-[#D9534F] font-normal">
-            {error}
+    <div className="flex min-h-screen bg-[#F9FAFB]">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col">
+        {/* Doctor Profile Section */}
+        <div className="flex flex-col items-center gap-4 pb-6 border-b border-gray-200">
+          {/* Profile Avatar - Component placeholder */}
+          <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
+            {/* <DoctorAvatar /> */}
+            <span className="text-gray-400 text-sm">Avatar</span>
           </div>
-        )}
-        
-        {loading && (
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="animate-pulse rounded-xl border border-[#E5E5E5] bg-white p-6 space-y-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-              <div className="h-5 w-1/2 bg-[#E5E5E5] rounded" />
-              <div className="h-3 w-3/4 bg-[#E5E5E5] rounded" />
-              <div className="h-24 w-full bg-[#E5E5E5] rounded" />
+
+          {/* Doctor Name & Specialty - Component placeholder */}
+          <div className="text-center">
+            {/* <DoctorInfo name="Dr. John Doe" specialty="Cardiologist" /> */}
+            <h3 className="font-semibold text-[#111111]">Dr. John Doe</h3>
+            <p className="text-sm text-[#888888]">Cardiologist</p>
+          </div>
+
+          {/* Availability Toggle Button - Component placeholder */}
+          <div className="w-full">
+            {/* <AvailabilityToggle /> */}
+            <button className="w-full px-4 py-2 bg-[#2AB3A3] text-white rounded-lg text-sm font-medium hover:bg-[#1F8478]">
+              Available
+            </button>
+          </div>
+        </div>
+
+        {/* Navigation List */}
+        <nav className="flex-1 flex flex-col gap-2 mt-6">
+          {/* <DashboardNav /> */}
+          <a
+            href="/doctor/dashboard"
+            className="px-4 py-2 rounded-lg bg-[#E6F9F0] text-[#2AB3A3] font-medium"
+          >
+            Dashboard
+          </a>
+          <a
+            href="/doctor/appointments"
+            className="px-4 py-2 rounded-lg text-[#4A4A4A] hover:bg-gray-100"
+          >
+            Appointments
+          </a>
+          <a
+            href="/doctor/settings"
+            className="px-4 py-2 rounded-lg text-[#4A4A4A] hover:bg-gray-100"
+          >
+            Settings
+          </a>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Page Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-semibold text-[#111111]">
+              Dashboard
+            </h1>
+            <p className="text-[#888888] mt-1">
+              Welcome back! Here's your overview.
+            </p>
+          </div>
+
+          {/* Top Row: Next Appointment + Total Customers */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            {/* Next Appointment Card - Top Left */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              {/* <NextAppointmentCard /> */}
+              <h2 className="text-lg font-semibold text-[#111111] mb-4">
+                Next Appointment
+              </h2>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+                  <div>
+                    <p className="font-medium text-[#111111]">Jane Smith</p>
+                    <p className="text-sm text-[#888888]">
+                      Today at 2:00 PM
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-3 border-t border-gray-100">
+                  <p className="text-sm text-[#4A4A4A]">
+                    Follow-up consultation
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="animate-pulse rounded-xl border border-[#E5E5E5] bg-white p-6 space-y-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-              <div className="h-5 w-1/2 bg-[#E5E5E5] rounded" />
-              <div className="h-3 w-3/4 bg-[#E5E5E5] rounded" />
-              <div className="h-24 w-full bg-[#E5E5E5] rounded" />
+
+            {/* Total Customers Card - Top Right */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              {/* <TotalCustomersCard /> */}
+              <h2 className="text-lg font-semibold text-[#111111] mb-4">
+                Total Patients
+              </h2>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-4xl font-bold text-[#2AB3A3]">248</p>
+                  <p className="text-sm text-[#888888] mt-1">
+                    +12 this month
+                  </p>
+                </div>
+                <div className="w-16 h-16 rounded-full bg-[#E6F9F0] flex items-center justify-center">
+                  {/* Icon placeholder */}
+                  <span className="text-2xl">👥</span>
+                </div>
+              </div>
             </div>
           </div>
-        )}
-        
-        {!loading && (
-          <div className="grid gap-6 md:grid-cols-2">
-            <Appointments
-              title="Past Appointments"
-              description="Completed visits."
-              appointments={pastAppointments}
-            />
-            <Appointments
-              title="Upcoming Appointments"
-              description="Scheduled visits."
-              appointments={upcomingAppointments}
-            />
+
+          {/* Bottom Row: Weekly Overview + Latest Appointments */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Weekly Overview Card - Bottom Left */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              {/* <WeeklyOverviewChart /> */}
+              <h2 className="text-lg font-semibold text-[#111111] mb-4">
+                Weekly Overview
+              </h2>
+              <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+                {/* Chart component goes here (e.g., Recharts, Chart.js) */}
+                <p className="text-[#888888] text-sm">
+                  Chart: Appointments per day
+                </p>
+              </div>
+            </div>
+
+            {/* Latest Appointments Card - Bottom Right */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              {/* <LatestAppointmentsList /> */}
+              <h2 className="text-lg font-semibold text-[#111111] mb-4">
+                Latest Appointments
+              </h2>
+              <div className="space-y-4">
+                {/* Appointment Item 1 */}
+                <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
+                  <div className="w-10 h-10 rounded-full bg-gray-200"></div>
+                  <div className="flex-1">
+                    <p className="font-medium text-[#111111]">John Doe</p>
+                    <p className="text-sm text-[#888888]">Dec 1, 10:00 AM</p>
+                  </div>
+                  <span className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                    Completed
+                  </span>
+                </div>
+
+                {/* Appointment Item 2 */}
+                <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
+                  <div className="w-10 h-10 rounded-full bg-gray-200"></div>
+                  <div className="flex-1">
+                    <p className="font-medium text-[#111111]">Sarah Connor</p>
+                    <p className="text-sm text-[#888888]">Nov 30, 3:00 PM</p>
+                  </div>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                    Scheduled
+                  </span>
+                </div>
+
+                {/* Appointment Item 3 */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gray-200"></div>
+                  <div className="flex-1">
+                    <p className="font-medium text-[#111111]">Mike Ross</p>
+                    <p className="text-sm text-[#888888]">Nov 29, 1:00 PM</p>
+                  </div>
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                    Cancelled
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      </main>
     </div>
-  )
+  );
 }
