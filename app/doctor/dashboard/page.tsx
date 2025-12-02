@@ -18,24 +18,49 @@ interface NextAppointment {
   purpose: string;
 }
 
+type LatestAppointmentItem = {
+  id: string;
+  patientName: string;
+  patientInitials: string; // not used by the card, but comes from API
+  dateTimeLabel: string;   // API field name
+  status: "scheduled" | "completed";
+  description: string | null;
+};
+
 export default function DoctorDashboardPage() {
   const [nextAppointment, setNextAppointment] = useState<NextAppointment | null>(null);
+  const [latestAppointments, setLatestAppointments] = useState<LatestAppointmentItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('/api/doctor/next-appointment');
-        const data = await res.json();
-        setNextAppointment(data);
+        const [nextRes, latestRes] = await Promise.all([
+          fetch('/api/doctor/next-appointment'),
+          fetch('/api/doctor/latest-appointments'),
+        ]);
+
+        const nextData = await nextRes.json();
+        const latestData: LatestAppointmentItem[] = await latestRes.json();
+
+        setNextAppointment(nextData ?? null);
+        setLatestAppointments(latestData ?? []);
       } catch (error) {
-        console.error('Error fetching next appointment:', error);
+        console.error('Error fetching dashboard data:', error);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  // Map API items to the card’s expected shape
+  const latestAppointmentsForCard = latestAppointments.map((item) => ({
+    id: item.id,
+    patientName: item.patientName,
+    time: item.dateTimeLabel,
+    status: item.status as "scheduled" | "completed" | "cancelled",
+  }));
 
   return (
     <div className="flex min-h-screen bg-[#F9FAFB]">
@@ -54,7 +79,11 @@ export default function DoctorDashboardPage() {
                 <TotalPatientsCard total={248} deltaMonthly={12} />
                 <TodayAppointmentsCard count={12} delta={3} />
               </div>
-              <LatestAppointmentsCard />
+              <LatestAppointmentsCard
+                appointments={latestAppointmentsForCard}
+                title="Latest Appointments"
+                itemsPerPage={6}
+              />
             </div>
 
             <div className="lg:col-span-6 flex flex-col gap-6">
