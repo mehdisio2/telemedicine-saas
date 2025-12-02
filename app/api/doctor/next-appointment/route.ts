@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
+
 export async function GET() {
   try {
     const supabase = await createClient();
@@ -81,13 +82,13 @@ export async function GET() {
     // Return formatted appointment data
     const nextAppointment = {
       id: appointment.id,
-      patientName: appointment.patients?.[0]?.full_name || 'Unknown Patient',
+      patientName: (appointment.patients as any)?.full_name || 'Unknown Patient',
       time: timeString,
       purpose: appointment.description || 'No description provided',
     };
     
     return NextResponse.json(nextAppointment);
-  } catch (error) {
+   } catch (error) {
     console.error('Error fetching next appointment:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
