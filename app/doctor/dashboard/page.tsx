@@ -1,11 +1,42 @@
+"use client";
 import { DoctorSidebar } from "@/components/doctor/sidebar";
-import { NextAppointmentCard } from "@/components/doctor/next-appointment-card";
+import { 
+  NextAppointmentCard, 
+  NextAppointmentCardSkeleton, 
+  NoAppointmentCard 
+} from "@/components/doctor/next-appointment-card";
 import { TotalPatientsCard } from "@/components/doctor/total-patients-card";
 import { TodayAppointmentsCard } from "@/components/doctor/today-appointments-card";
 import { MonthlyOverviewCard } from "@/components/doctor/monthly-overview-card";
 import { LatestAppointmentsCard } from "@/components/doctor/latest-appointments-card";
+import { useState, useEffect } from "react";
+
+interface NextAppointment {
+  id: string;
+  patientName: string;
+  time: string;
+  purpose: string;
+}
 
 export default function DoctorDashboardPage() {
+  const [nextAppointment, setNextAppointment] = useState<NextAppointment | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/doctor/next-appointment');
+        const data = await res.json();
+        setNextAppointment(data);
+      } catch (error) {
+        console.error('Error fetching next appointment:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-[#F9FAFB]">
       <DoctorSidebar />
@@ -18,7 +49,6 @@ export default function DoctorDashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Right section moved to left */}
             <div className="lg:col-span-6 flex flex-col gap-6">
               <div className="grid grid-cols-2 gap-2">
                 <TotalPatientsCard total={248} deltaMonthly={12} />
@@ -27,9 +57,20 @@ export default function DoctorDashboardPage() {
               <LatestAppointmentsCard />
             </div>
 
-            {/* Left section moved to right */}
             <div className="lg:col-span-6 flex flex-col gap-6">
-              <NextAppointmentCard heightClass="h-56 md:h-64" />
+              {loading ? (
+                <NextAppointmentCardSkeleton heightClass="h-56 md:h-64" />
+              ) : nextAppointment ? (
+                <NextAppointmentCard
+                  patientName={nextAppointment.patientName}
+                  time={nextAppointment.time}
+                  purpose={nextAppointment.purpose}
+                  callHref={`/doctor/call/${nextAppointment.id}`}
+                  heightClass="h-56 md:h-64"
+                />
+              ) : (
+                <NoAppointmentCard heightClass="h-56 md:h-64" />
+              )}
               <MonthlyOverviewCard heightClass="h-96" />
             </div>
           </div>
