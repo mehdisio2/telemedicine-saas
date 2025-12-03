@@ -4,18 +4,37 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 type AvailabilityStatus = "available" | "unavailable" | "offline";
 
+export interface DoctorData {
+    name: string;
+    license_number: string;
+    specialty: string;
+    avatar?: string;
+}
+
 interface DoctorContextType {
     availability: AvailabilityStatus;
     setAvailability: (status: AvailabilityStatus) => void;
+    doctorData: DoctorData;
+    setDoctorData: (data: DoctorData) => void;
 }
 
 const DoctorContext = createContext<DoctorContextType | undefined>(undefined);
 
-export function DoctorProvider({ children }: { children: ReactNode }) {
+interface DoctorProviderProps {
+    children: ReactNode;
+    initialDoctorData?: DoctorData;
+}
+
+export function DoctorProvider({ children, initialDoctorData }: DoctorProviderProps) {
     const [availability, setAvailability] = useState<AvailabilityStatus>("available");
+    const [doctorData, setDoctorData] = useState<DoctorData>(initialDoctorData || {
+        name: "Dr. John Doe",
+        license_number: "BDS, MDS",
+        specialty: "Cardiologist",
+    });
 
     return (
-        <DoctorContext.Provider value={{ availability, setAvailability }}>
+        <DoctorContext.Provider value={{ availability, setAvailability, doctorData, setDoctorData }}>
             {children}
         </DoctorContext.Provider>
     );

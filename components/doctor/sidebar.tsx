@@ -23,23 +23,7 @@ import { useDoctor } from "@/components/doctor/doctor-context";
 
 export function DoctorSidebar() {
   const pathname = usePathname();
-  const { availability, setAvailability } = useDoctor();
-  const [doctorData, setDoctorData] = useState<DoctorData>({
-    name: "Dr. John Doe",
-    license_number: "BDS, MDS",
-    specialty: "Cardiologist",
-  });
-
-  useEffect(() => {
-    // TODO: Fetch doctor data from your API
-    // Example:
-    const fetchDoctorData = async () => {
-      const response = await fetch('/api/doctor/profile');
-      const data = await response.json();
-      setDoctorData(data);
-    };
-    fetchDoctorData();
-  }, []);
+  const { availability, setAvailability, doctorData } = useDoctor();
 
   const navItems = [
     {
