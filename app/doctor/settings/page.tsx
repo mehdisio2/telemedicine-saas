@@ -101,14 +101,19 @@ export default function DoctorSettingsPage() {
                 throw new Error("You must select an image to upload.");
             }
 
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error("User not authenticated");
+
             const file = e.target.files[0];
             const fileExt = file.name.split(".").pop();
-            const fileName = `${Math.random()}.${fileExt}`;
-            const filePath = `${fileName}`;
+            const fileName = `${Date.now()}.${fileExt}`;
+            const filePath = `${user.id}/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
                 .from("avatars")
-                .upload(filePath, file);
+                .upload(filePath, file, {
+                    upsert: true
+                });
 
             if (uploadError) {
                 throw uploadError;
