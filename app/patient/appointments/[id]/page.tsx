@@ -1,33 +1,48 @@
 import { PatientSidebar } from "@/components/patient/sidebar";
 import { Calendar, Clock, User, Stethoscope, FileText, Video, CheckCircle, AlertCircle, XCircle } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { notFound } from "next/navigation";
 
-// Mock data - replace with actual data fetching
-async function getAppointmentDetails(id: string) {
-  // Simulate API call
-  return {
-    id,
-    date: "December 15, 2025",
-    time: "2:30 PM",
-    datetime: "2025-12-15T14:30:00",
-    status: "confirmed", // confirmed, completed, cancelled, upcoming
-    doctor: {
-      name: "Dr. Sarah Mitchell",
-      specialty: "Cardiology",
-      avatar: "/doctor-avatar.jpg",
-      email: "sarah.mitchell@healthcenter.com",
-      phone: "+1 (555) 123-4567"
-    },
-    reason: "Cardiology Consultation",
-    duration: "30 minutes",
-    roomId: "apt-12345-abc",
-    medicalNotes: "Patient presents with occasional chest discomfort. ECG results reviewed - normal sinus rhythm. Blood pressure: 120/80 mmHg. Recommended lifestyle modifications including regular exercise and reduced sodium intake. Follow-up in 3 months or sooner if symptoms worsen. Prescribed low-dose aspirin as preventive measure.",
-    isActive: false // Set to true to test join call button
-  };
-}
+export default async function AppointmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const supabase = await createClient();
+  const { id } = await params;
 
-export default async function AppointmentDetailPage({ params }: { params: { id: string } }) {
-  const appointment = await getAppointmentDetails(params.id);
+  // Fetch appointment details
+  const { data: appointment, error: appointmentError } = await supabase
+    .from("appointments")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (appointmentError || !appointment) {
+    console.error("Error fetching appointment:", appointmentError);
+    notFound();
+  }
+
+  // Fetch doctor details
+  const { data: doctor, error: doctorError } = await supabase
+    .from("doctors")
+    .select("*")
+    .eq("id", appointment.doctor_id)
+    .single();
+
+  if (doctorError) {
+    console.error("Error fetching doctor:", doctorError);
+    // We can continue without doctor details, or handle it differently
+  }
+
+  const formattedDate = new Date(appointment.datetime).toLocaleDateString("en-US", {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  const formattedTime = new Date(appointment.datetime).toLocaleTimeString("en-US", {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
 
   const getStatusBadge = (status: string) => {
     const badges = {
@@ -46,6 +61,11 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
         text: "Cancelled",
         className: "bg-red-50 text-red-700 border-red-200"
       },
+      scheduled: {
+        icon: <Clock className="w-4 h-4" />,
+        text: "Scheduled",
+        className: "bg-teal-50 text-teal-700 border-teal-200"
+      },
       upcoming: {
         icon: <Clock className="w-4 h-4" />,
         text: "Upcoming",
@@ -54,7 +74,7 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
     };
 
     const badge = badges[status as keyof typeof badges] || badges.upcoming;
-    
+
     return (
       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium border ${badge.className}`}>
         {badge.icon}
@@ -67,17 +87,17 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
     <div className="flex bg-[#F9FAFB] min-h-screen">
       {/* Sidebar */}
       <PatientSidebar />
-      
+
       {/* Main content area */}
       <main className="flex-1 p-8">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <Link 
-              href="/patient/appointments" 
+            <Link
+              href="/patient/dashboard"
               className="text-sm text-gray-600 hover:text-gray-900 mb-2 inline-block"
             >
-              ← Back to Appointments
+              ← Back to Dashboard
             </Link>
             <h1 className="text-3xl font-semibold text-[#111111] mb-2">Appointment Details</h1>
             <p className="text-gray-600">View your appointment information and join the video call when ready.</p>
@@ -102,7 +122,7 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
                     <div>
                       <p className="text-sm text-gray-500">Date & Time</p>
                       <p className="text-base font-semibold text-gray-900">
-                        {appointment.date} at {appointment.time}
+                        {formattedDate} at {formattedTime}
                       </p>
                     </div>
                   </div>
@@ -114,7 +134,7 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Duration</p>
-                      <p className="text-base font-semibold text-gray-900">{appointment.duration}</p>
+                      <p className="text-base font-semibold text-gray-900">30 minutes</p>
                     </div>
                   </div>
 
@@ -125,7 +145,7 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Reason for Visit</p>
-                      <p className="text-base font-semibold text-gray-900">{appointment.reason}</p>
+                      <p className="text-base font-semibold text-gray-900">{appointment.description || "General Consultation"}</p>
                     </div>
                   </div>
 
@@ -136,7 +156,7 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Room ID</p>
-                      <p className="text-base font-mono font-semibold text-gray-900">{appointment.roomId}</p>
+                      <p className="text-base font-mono font-semibold text-gray-900">{appointment.room_id || "Not assigned"}</p>
                     </div>
                   </div>
                 </div>
@@ -148,35 +168,28 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
                   <FileText className="w-5 h-5 text-gray-700" />
                   <h2 className="text-xl font-bold text-gray-900">Medical Notes</h2>
                 </div>
-                
-                {appointment.medicalNotes ? (
-                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                      {appointment.medicalNotes}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 text-center">
-                    <p className="text-gray-500">No medical notes available yet.</p>
-                    <p className="text-sm text-gray-400 mt-1">Notes will be added by your doctor after the appointment.</p>
-                  </div>
-                )}
+
+                {/* Notes are not yet in the DB schema provided, so we'll show a placeholder or empty state */}
+                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 text-center">
+                  <p className="text-gray-500">No medical notes available yet.</p>
+                  <p className="text-sm text-gray-400 mt-1">Notes will be added by your doctor after the appointment.</p>
+                </div>
               </section>
             </div>
 
             {/* Sidebar - Right Column */}
             <div className="space-y-6">
               {/* Join Call Button */}
-              {appointment.isActive && (
-                <section className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl shadow-lg p-6 text-white">
+              {appointment.status === 'scheduled' && (
+                <section className="bg-gradient-to-br from-[#2AB3A3] to-[#1F8478] rounded-2xl shadow-lg p-6 text-white">
                   <div className="text-center mb-4">
                     <Video className="w-12 h-12 mx-auto mb-3" />
                     <h3 className="text-lg font-bold mb-1">Your appointment is ready!</h3>
-                    <p className="text-sm text-blue-100">Click below to join the video call</p>
+                    <p className="text-sm text-white/90">Click below to join the video call</p>
                   </div>
                   <Link
-                    href={`/patient/video-call/${appointment.roomId}`}
-                    className="block w-full bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3 px-4 rounded-lg text-center transition-colors"
+                    href={`/patient/video-call/${appointment.room_id}`}
+                    className="block w-full bg-white text-[#2AB3A3] hover:bg-teal-50 font-semibold py-3 px-4 rounded-lg text-center transition-colors"
                   >
                     Join Video Call
                   </Link>
@@ -186,25 +199,25 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
               {/* Doctor Info Card */}
               <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Doctor Information</h3>
-                
+
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                     <User className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">{appointment.doctor.name}</p>
-                    <p className="text-sm text-gray-600">{appointment.doctor.specialty}</p>
+                    <p className="font-semibold text-gray-900">{doctor?.full_name || "Unknown Doctor"}</p>
+                    <p className="text-sm text-gray-600">{doctor?.specialty || "General Practice"}</p>
                   </div>
                 </div>
 
                 <div className="space-y-3 pt-4 border-t border-gray-100">
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Email</p>
-                    <p className="text-sm text-gray-900">{appointment.doctor.email}</p>
+                    <p className="text-sm text-gray-900">{doctor?.email || "Not available"}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Phone</p>
-                    <p className="text-sm text-gray-900">{appointment.doctor.phone}</p>
+                    <p className="text-sm text-gray-900">{doctor?.phone || "Not available"}</p>
                   </div>
                 </div>
               </section>
@@ -212,13 +225,13 @@ export default async function AppointmentDetailPage({ params }: { params: { id: 
               {/* Actions Card */}
               <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Actions</h3>
-                
+
                 <div className="space-y-3">
                   <button className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
                     <p className="text-sm font-medium text-gray-900">Download Summary</p>
                   </button>
-                  
-                  {appointment.status === "confirmed" && (
+
+                  {appointment.status === "scheduled" && (
                     <button className="w-full text-left px-4 py-3 rounded-lg border border-red-200 hover:bg-red-50 text-red-600 transition-colors">
                       <p className="text-sm font-medium">Cancel Appointment</p>
                     </button>
