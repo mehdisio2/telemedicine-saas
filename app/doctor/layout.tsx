@@ -26,7 +26,7 @@ export default async function DoctorLayout({ children }: DoctorLayoutProps) {
     // Fetch doctor profile
     const { data: profile } = await supabase
       .from("doctors")
-      .select("full_name, license_number, specialty, avatar_url")
+      .select("full_name, license_number, specialty, image_url")
       .eq("id", user.id)
       .single();
 
@@ -35,7 +35,7 @@ export default async function DoctorLayout({ children }: DoctorLayoutProps) {
         name: profile.full_name,
         license_number: profile.license_number,
         specialty: profile.specialty,
-        avatar: profile.avatar_url
+        avatar: profile.image_url
       };
     }
   }
