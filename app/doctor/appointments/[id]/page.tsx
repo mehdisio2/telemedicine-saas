@@ -1,4 +1,4 @@
-"use client";
+import { createClient } from "@/lib/supabase/server";
 import { DoctorSidebar } from "@/components/doctor/sidebar";
 import { StartConsultationCard } from "@/components/doctor/start-consultation-card";
 import { AppointmentOverviewCard } from "@/components/doctor/appointment-overview-card";
@@ -6,42 +6,59 @@ import { AddNotesSection } from "@/components/doctor/add-notes-section";
 import { PastNotesSection } from "@/components/doctor/past-notes-section";
 import { PatientInfoCard } from "@/components/doctor/patient-info-card";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-// Mock data - replace with actual data fetching
-function getAppointmentDetails(id: string) {
-  return {
-    id,
-    date: "December 15, 2025",
-    time: "2:30 PM",
-    datetime: "2025-12-15T14:30:00",
-    status: "confirmed", // confirmed, completed, cancelled
-    patient: {
-      name: "John Anderson",
-      age: 45,
-      gender: "Male",
-      email: "john.anderson@email.com",
-      phone: "+1 (555) 987-6543",
-      bloodType: "A+"
+export default async function DoctorAppointmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  // Fetch appointment details
+  const { data: appointment, error: appointmentError } = await supabase
+    .from("appointments")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (appointmentError || !appointment) {
+    console.error("Error fetching appointment:", appointmentError);
+    notFound();
+  }
+
+  // Fetch patient details
+  const { data: patient, error: patientError } = await supabase
+    .from("patients")
+    .select("*")
+    .eq("id", appointment.patient_id)
+    .single();
+
+  if (patientError || !patient) {
+    console.error("Error fetching patient:", patientError);
+    // Handle missing patient gracefully or 404
+  }
+
+  // Mock past notes for now as we don't have a notes table yet
+  const pastNotes = [
+    {
+      date: "November 10, 2025",
+      note: "Patient reported improvement in chest discomfort. Blood pressure stable at 118/78 mmHg. Continuing current medication regimen. Advised to maintain regular exercise routine."
     },
-    reason: "Cardiology Consultation",
-    duration: "30 minutes",
-    roomId: "apt-12345-abc",
-    isActive: true, // Set to true to show start consultation button
-    pastNotes: [
-      {
-        date: "November 10, 2025",
-        note: "Patient reported improvement in chest discomfort. Blood pressure stable at 118/78 mmHg. Continuing current medication regimen. Advised to maintain regular exercise routine."
-      },
-      {
-        date: "September 5, 2025",
-        note: "Initial consultation. Patient presents with occasional chest discomfort during physical activity. ECG performed - normal sinus rhythm. Recommended lifestyle modifications and scheduled follow-up."
-      }
-    ]
-  };
-}
+    {
+      date: "September 5, 2025",
+      note: "Initial consultation. Patient presents with occasional chest discomfort during physical activity. ECG performed - normal sinus rhythm. Recommended lifestyle modifications and scheduled follow-up."
+    }
+  ];
 
-export default function DoctorAppointmentDetailPage({ params }: { params: { id: string } }) {
-  const appointment = getAppointmentDetails(params.id);
+  const formattedDate = new Date(appointment.datetime).toLocaleDateString("en-US", {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  const formattedTime = new Date(appointment.datetime).toLocaleTimeString("en-US", {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
 
   return (
     <div className="flex bg-[#F9FAFB] min-h-screen">
@@ -68,16 +85,16 @@ export default function DoctorAppointmentDetailPage({ params }: { params: { id: 
             <div className="lg:col-span-2 space-y-6">
               {/* Start Consultation Card */}
               <StartConsultationCard
-                roomId={appointment.roomId}
-                isActive={appointment.isActive}
+                roomId={appointment.room_id || ""}
+                isActive={appointment.status === "scheduled"} // Assuming scheduled means active for now
               />
 
               {/* Appointment Overview Card */}
               <AppointmentOverviewCard
-                date={appointment.date}
-                time={appointment.time}
-                duration={appointment.duration}
-                reason={appointment.reason}
+                date={formattedDate}
+                time={formattedTime}
+                duration="30 minutes" // Default duration as it's not in DB
+                reason={appointment.description || "General Consultation"}
                 status={appointment.status as "confirmed" | "completed" | "cancelled"}
               />
 
@@ -85,20 +102,29 @@ export default function DoctorAppointmentDetailPage({ params }: { params: { id: 
               <AddNotesSection />
 
               {/* Past Notes Section */}
-              <PastNotesSection notes={appointment.pastNotes} />
+              <PastNotesSection notes={pastNotes} />
             </div>
 
             {/* Sidebar - Right Column */}
             <div className="space-y-6">
               {/* Patient Info Card */}
-              <PatientInfoCard patient={appointment.patient} />
+              <PatientInfoCard
+                patient={{
+                  name: patient?.full_name || "Unknown",
+                  age: patient?.age || 0, // Assuming age exists or defaulting
+                  gender: patient?.gender || "Unknown",
+                  email: patient?.email || "Unknown",
+                  phone: patient?.phone || "Unknown",
+                  bloodType: patient?.blood_type || "Unknown" // Guessing column name
+                }}
+              />
 
               {/* Room ID Card */}
               <section className="bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-200 shadow-sm p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Video Call Details</h3>
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <p className="text-xs text-gray-500 mb-1">Room ID</p>
-                  <p className="text-base font-mono font-semibold text-gray-900 break-all">{appointment.roomId}</p>
+                  <p className="text-base font-mono font-semibold text-gray-900 break-all">{appointment.room_id || "Not assigned"}</p>
                 </div>
                 <p className="text-xs text-gray-500 mt-3">Share this ID with the patient if needed</p>
               </section>
@@ -116,7 +142,7 @@ export default function DoctorAppointmentDetailPage({ params }: { params: { id: 
                     <p className="text-sm font-medium text-gray-900">Download Report</p>
                   </button>
 
-                  {appointment.status === "confirmed" && (
+                  {appointment.status === "scheduled" && (
                     <button className="w-full text-left px-4 py-3 rounded-lg border border-red-200 hover:bg-red-50 text-red-600 transition-colors">
                       <p className="text-sm font-medium">Cancel Appointment</p>
                     </button>

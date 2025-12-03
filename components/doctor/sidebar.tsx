@@ -19,9 +19,11 @@ interface DoctorData {
   avatar?: string;
 }
 
+import { useDoctor } from "@/components/doctor/doctor-context";
+
 export function DoctorSidebar() {
   const pathname = usePathname();
-  const [availability, setAvailability] = useState<"available" | "unavailable">("available");
+  const { availability, setAvailability } = useDoctor();
   const [doctorData, setDoctorData] = useState<DoctorData>({
     name: "Dr. John Doe",
     license_number: "BDS, MDS",
@@ -31,12 +33,12 @@ export function DoctorSidebar() {
   useEffect(() => {
     // TODO: Fetch doctor data from your API
     // Example:
-       const fetchDoctorData = async () => {
-         const response = await fetch('/api/doctor/profile');
-         const data = await response.json();
-         setDoctorData(data);
-     };
-     fetchDoctorData();
+    const fetchDoctorData = async () => {
+      const response = await fetch('/api/doctor/profile');
+      const data = await response.json();
+      setDoctorData(data);
+    };
+    fetchDoctorData();
   }, []);
 
   const navItems = [
@@ -152,11 +154,10 @@ export function DoctorSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-                isActive
-                  ? "bg-[#E6F9F0] text-[#2AB3A3]"
-                  : "text-[#4A4A4A] hover:bg-gray-100"
-              }`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${isActive
+                ? "bg-[#E6F9F0] text-[#2AB3A3]"
+                : "text-[#4A4A4A] hover:bg-gray-100"
+                }`}
             >
               {item.icon}
               {item.label}

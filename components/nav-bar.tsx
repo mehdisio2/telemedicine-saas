@@ -3,16 +3,17 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { useDoctor } from "@/components/doctor/doctor-context";
+
 type NavBarProps = {
   doctorName?: string;
-  availability?: "available" | "offline";
 };
 
 export function NavBar({
   doctorName = "Dr. John Doe",
-  availability = "available",
 }: NavBarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { availability } = useDoctor();
   const isAvailable = availability === "available";
 
   return (
@@ -49,15 +50,13 @@ export function NavBar({
         <div className="flex items-center gap-3 md:gap-4">
           {/* Availability status indicator (passive) */}
           <div
-            className={`hidden sm:flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium ${
-              isAvailable ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-600"
-            }`}
+            className={`hidden sm:flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium ${isAvailable ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-600"
+              }`}
             aria-live="polite"
           >
             <span
-              className={`inline-block size-2.5 rounded-full ${
-                isAvailable ? "bg-green-500" : "bg-gray-400"
-              }`}
+              className={`inline-block size-2.5 rounded-full ${isAvailable ? "bg-green-500" : "bg-gray-400"
+                }`}
               aria-hidden="true"
             />
             <span>{isAvailable ? "Available" : "Offline"}</span>

@@ -7,7 +7,7 @@ type AppointmentOverviewCardProps = {
   time: string;
   duration: string;
   reason: string;
-  status: "confirmed" | "completed" | "cancelled";
+  status: "scheduled" | "confirmed" | "completed" | "cancelled";
 };
 
 export function AppointmentOverviewCard({
@@ -19,6 +19,11 @@ export function AppointmentOverviewCard({
 }: AppointmentOverviewCardProps) {
   const getStatusBadge = (status: string) => {
     const badges = {
+      scheduled: {
+        icon: <Calendar className="w-4 h-4" />,
+        text: "Scheduled",
+        className: "bg-blue-50 text-blue-700 border-blue-200"
+      },
       confirmed: {
         icon: <CheckCircle className="w-4 h-4" />,
         text: "Confirmed",
@@ -36,8 +41,8 @@ export function AppointmentOverviewCard({
       }
     };
 
-    const badge = badges[status as keyof typeof badges] || badges.confirmed;
-    
+    const badge = badges[status as keyof typeof badges] || badges.scheduled;
+
     return (
       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium border ${badge.className}`}>
         {badge.icon}
