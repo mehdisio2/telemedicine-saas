@@ -1,5 +1,6 @@
 'use client'
 import SearchFilter from "@/components/search-filter"
+import { PatientSidebar } from "@/components/patient/sidebar";
 import { createClient } from "@/lib/supabase/client"
 import { useState, useEffect } from "react"
 import { DoctorCard } from "@/components/doctor-card"
@@ -33,13 +34,13 @@ function assignRandomImages(list: Doctor[]) {
 export default function NewAppointmentPage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
 
-    useEffect(() => {
-        const fetchInitialDoctors = async () => {
-            const supabase = createClient();
-            const { data, error } = await supabase
-                .from("doctors")
-                .select("id, full_name, specialty")
-                .limit(9);
+  useEffect(() => {
+    const fetchInitialDoctors = async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("doctors")
+        .select("id, full_name, specialty")
+        .limit(9);
 
       if (error) {
         console.error(error);
@@ -52,11 +53,11 @@ export default function NewAppointmentPage() {
     fetchInitialDoctors();
   }, []);
 
-    const handleSearch = async (filters: { specialty: string; date: string }) => {
-        const supabase = createClient();
-        let query = supabase
-            .from("doctors")
-            .select("id, full_name, specialty");
+  const handleSearch = async (filters: { specialty: string; date: string }) => {
+    const supabase = createClient();
+    let query = supabase
+      .from("doctors")
+      .select("id, full_name, specialty");
 
     if (filters.specialty) {
       query = query.eq("specialty", filters.specialty);
@@ -73,44 +74,47 @@ export default function NewAppointmentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] py-8">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-6">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-[#111111]">Book a New Appointment</h1>
-          <p className="text-sm font-light text-[#888888]">Find available doctors matching your search.</p>
-        </header>
+    <div className="flex bg-[#F9FAFB] min-h-screen">
+      <PatientSidebar />
+      <main className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <header className="space-y-2">
+            <h1 className="text-3xl font-semibold tracking-tight text-[#111111]">Book a New Appointment</h1>
+            <p className="text-sm font-light text-[#888888]">Find available doctors matching your search.</p>
+          </header>
 
-        <div className="md:sticky md:top-0 z-50 bg-[#F9FAFB] -mx-4 md:-mx-6 px-4 md:px-6 py-4">
-          <SearchFilter onSearch={handleSearch} />
-        </div>
-
-        <hr className="border-t border-[#E5E5E5]" />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {doctors.map((doctor) => (
-            <DoctorCard
-              key={doctor.id}
-              id={doctor.id}
-              full_name={doctor.full_name}
-              specialty={doctor.specialty}
-              city={doctor.city ?? "Minneapolis, MN"}
-              duration={doctor.duration ?? "30 Min"}
-              fee={doctor.fee ?? 650}
-              photoUrl={doctor.photo_url ?? "/images/doctor-placeholder.jpg"}
-              rating={doctor.rating ?? 5.0}
-              isAvailable={doctor.is_available ?? true}
-            />
-          ))}
-        </div>
-
-        {doctors.length > 3 && (
-          <div className="flex justify-center mt-8">
-            <PaginationDemo />
+          <div className="md:sticky md:top-0 z-50 bg-[#F9FAFB] -mx-4 md:-mx-6 px-4 md:px-6 py-4">
+            <SearchFilter onSearch={handleSearch} />
           </div>
-        )}
 
-        <div className="h-64 md:h-96" aria-hidden="true" />
-      </div>
+          <hr className="border-t border-[#E5E5E5]" />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {doctors.map((doctor) => (
+              <DoctorCard
+                key={doctor.id}
+                id={doctor.id}
+                full_name={doctor.full_name}
+                specialty={doctor.specialty}
+                city={doctor.city ?? "Minneapolis, MN"}
+                duration={doctor.duration ?? "30 Min"}
+                fee={doctor.fee ?? 650}
+                photoUrl={doctor.photo_url ?? "/images/doctor-placeholder.jpg"}
+                rating={doctor.rating ?? 5.0}
+                isAvailable={doctor.is_available ?? true}
+              />
+            ))}
+          </div>
+
+          {doctors.length > 3 && (
+            <div className="flex justify-center mt-8">
+              <PaginationDemo />
+            </div>
+          )}
+
+          <div className="h-64 md:h-96" aria-hidden="true" />
+        </div>
+      </main>
     </div>
   )
 }

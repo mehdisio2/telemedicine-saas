@@ -1,3 +1,6 @@
+"use client";
+
+import { usePatient } from "@/components/patient/patient-context";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -10,6 +13,8 @@ import Image from "next/image";
  * - Theme: white bar, light grey border, clinical outline icons
  */
 export function PatientNavBar() {
+  const { patientData } = usePatient();
+
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
       <div className="h-16 px-8 flex items-center">
@@ -72,7 +77,7 @@ export function PatientNavBar() {
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow-sm">
               <Image
-                src="/images/patient-avatar.jpg"
+                src={patientData.avatar || "/images/patient-avatar.jpg"}
                 alt="Patient avatar"
                 width={36}
                 height={36}
@@ -80,7 +85,7 @@ export function PatientNavBar() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-[#111111]">John Doe</span>
+              <span className="text-sm font-semibold text-[#111111]">{patientData.name}</span>
               <span className="text-xs text-[#888888]">Patient</span>
             </div>
           </div>
