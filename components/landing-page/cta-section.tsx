@@ -1,4 +1,4 @@
-import React from 'react';
+import Link from 'next/link';
 import { THEME } from './theme';
 
 export const CTASection = () => (
@@ -15,9 +15,12 @@ export const CTASection = () => (
                     Join thousands of patients who trust TeleMedCare for their daily health needs. No waiting rooms, just care.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button className="px-8 py-4 bg-white text-teal-600 rounded-lg font-bold text-lg hover:bg-gray-50 transition-colors shadow-lg">
+                    <Link
+                        href="/login"
+                        className="px-8 py-4 bg-white text-teal-600 rounded-lg font-bold text-lg hover:bg-gray-50 transition-colors shadow-lg inline-block"
+                    >
                         Book an Appointment
-                    </button>
+                    </Link>
                     <button className="px-8 py-4 bg-teal-700 text-white border border-teal-600 rounded-lg font-semibold text-lg hover:bg-teal-800 transition-colors">
                         Download App
                     </button>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Activity, Menu, X } from 'lucide-react';
+import Link from 'next/link';
 import { THEME } from './theme';
 import { PrimaryButton, SecondaryButton } from './ui-components';
 
@@ -33,8 +34,8 @@ export const Navbar = () => {
 
                     {/* Desktop CTA */}
                     <div className="hidden md:flex items-center gap-4">
-                        <button className="text-sm font-medium hover:underline" style={{ color: THEME.colors.primary }}>Log In</button>
-                        <PrimaryButton className="h-10 px-5 text-sm">Book Now</PrimaryButton>
+                        <Link href="/login" className="text-sm font-medium hover:underline" style={{ color: THEME.colors.primary }}>Log In</Link>
+                        <PrimaryButton className="h-10 px-5 text-sm" href="/login">Book Now</PrimaryButton>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -55,8 +56,8 @@ export const Navbar = () => {
                     <a href="#" className="block py-2 font-medium" style={{ color: THEME.colors.darkGrey }}>For Patients</a>
                     <hr />
                     <div className="flex flex-col gap-3 pt-2">
-                        <SecondaryButton>Log In</SecondaryButton>
-                        <PrimaryButton>Book Appointment</PrimaryButton>
+                        <SecondaryButton href="/login">Log In</SecondaryButton>
+                        <PrimaryButton href="/login">Book Appointment</PrimaryButton>
                     </div>
                 </div>
             )}

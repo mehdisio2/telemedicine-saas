@@ -16,7 +16,7 @@ export default function TelemedicineLanding() {
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: THEME.colors.offWhite }}>
       <Navbar />
-      <HeroSection onOpenAIModal={() => setShowAIModal(true)} />
+      <HeroSection />
       <StatsSection />
       <SpecialtiesSection />
       <HowItWorksSection />

@@ -1,13 +1,10 @@
 import React from 'react';
-import { ArrowRight, Sparkles, Search, MapPin, Phone, Video, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, Sparkles, Search, MapPin, Phone, Video, CheckCircle, Stethoscope } from 'lucide-react';
 import { THEME } from './theme';
 import { PrimaryButton } from './ui-components';
 
-interface HeroSectionProps {
-    onOpenAIModal: () => void;
-}
-
-export const HeroSection = ({ onOpenAIModal }: HeroSectionProps) => (
+export const HeroSection = () => (
     <section className="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
@@ -35,23 +32,23 @@ export const HeroSection = ({ onOpenAIModal }: HeroSectionProps) => (
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                        <PrimaryButton className="h-12 px-8 text-base shadow-lg shadow-teal-100">
+                        <PrimaryButton className="h-12 px-8 text-base shadow-lg shadow-teal-100" href="/login">
                             Find a Doctor
                             <ArrowRight size={18} className="ml-2" />
                         </PrimaryButton>
 
-                        <button
-                            onClick={onOpenAIModal}
-                            className="h-12 px-6 rounded-lg font-medium transition-all duration-200 border flex items-center gap-2 hover:bg-teal-50"
+                        <Link
+                            href="/signup/doctor"
+                            className="h-12 px-6 rounded-lg font-medium transition-all duration-200 border flex items-center gap-2 hover:bg-teal-50 flex justify-center"
                             style={{
                                 backgroundColor: 'white',
                                 borderColor: THEME.colors.primary,
                                 color: THEME.colors.primary
                             }}
                         >
-                            <Sparkles size={18} />
-                            AI Symptom Match
-                        </button>
+                            <Stethoscope size={18} />
+                            Are you a Practicien
+                        </Link>
                     </div>
 
                     {/* Social Proof */}
@@ -101,13 +98,13 @@ export const HeroSection = ({ onOpenAIModal }: HeroSectionProps) => (
 
                 {/* Right Column: Visual */}
                 <div className="relative lg:h-[600px] flex items-center justify-center">
-                    <div className="relative z-10 w-full max-w-md">
+                    <div className="relative z-10 w-full max-w-xl">
                         {/* Main Card */}
                         <div className="bg-white p-4 rounded-2xl shadow-xl border border-gray-100 relative">
                             <div className="aspect-[4/3] rounded-xl overflow-hidden mb-4 relative">
                                 <img
-                                    src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800"
-                                    alt="Doctor Consultation"
+                                    src="/images/hero_doctor.jpg"
+                                    alt="Doctor Laughing"
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg flex items-center gap-3 shadow-sm">
