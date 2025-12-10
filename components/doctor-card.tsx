@@ -9,6 +9,7 @@ export type DoctorCardProps = {
   id: string; // Add the doctor's UUID
   full_name: string;
   specialty: string;
+  bio?: string;            // doctor's bio/description
   rating?: number;          // e.g. 5.0
   isAvailable?: boolean;    // availability badge
   city?: string;            // e.g. "Minneapolis, MN"
@@ -21,6 +22,7 @@ export function DoctorCard({
   id,
   full_name,
   specialty,
+  bio,
   rating = 5.0,
   isAvailable = true,
   city = "City, Country",
@@ -77,6 +79,11 @@ export function DoctorCard({
           {/* Name */}
           <h3 className="text-lg font-semibold text-gray-900">{full_name}</h3>
 
+          {/* Bio */}
+          {bio && (
+            <p className="mt-1 text-sm text-gray-500 line-clamp-2">{bio}</p>
+          )}
+
           {/* Meta row */}
           <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-gray-600">
             <span className="inline-flex items-center gap-1.5">
@@ -100,7 +107,7 @@ export function DoctorCard({
             </div>
             <button
               onClick={() => setIsBookingOpen(true)}
-              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-[#2AB3A3] text-white hover:bg-[#1F8478] transition-colors font-medium"
             >
               Book Now
             </button>

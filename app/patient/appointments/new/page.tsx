@@ -2,7 +2,7 @@
 import SearchFilter from "@/components/search-filter"
 import { PatientSidebar } from "@/components/patient/sidebar";
 import { createClient } from "@/lib/supabase/client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { DoctorCard } from "@/components/doctor-card"
 import { PaginationDemo } from "@/components/pagination"
 
@@ -10,24 +10,27 @@ type Doctor = {
   id: string;
   full_name: string;
   specialty: string;
+  bio?: string;
+  consultation_fee?: number;
+  image_url?: string;
   city?: string;
   duration?: string;
-  fee?: number;
-  photo_url?: string;
   rating?: number;
   is_available?: boolean;
 }
 
-const doctorImages = [
-  "/images/doctors/doctor-1.jpg",
-  "/images/doctors/doctor-2.jpg",
-  "/images/doctors/doctor-3.jpg",
-];
+// Generate a random rating between 4.0 and 5.0
+function generateRandomRating(): number {
+  return Math.round((4.0 + Math.random()) * 10) / 10;
+}
 
-function assignRandomImages(list: Doctor[]) {
+function processDoctors(list: Doctor[]) {
   return list.map(d => ({
     ...d,
-    photo_url: d.photo_url || doctorImages[Math.floor(Math.random() * doctorImages.length)]
+    // Use real image_url from database (Supabase storage), fallback to placeholder only if missing
+    image_url: d.image_url || "/images/doctor-placeholder.jpg",
+    // Generate random rating between 4.0 and 5.0
+    rating: generateRandomRating()
   }));
 }
 
@@ -39,7 +42,9 @@ export default function NewAppointmentPage() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("doctors")
-        .select("id, full_name, specialty")
+        .select("id, full_name, specialty, bio, consultation_fee, image_url")
+        .eq("verification_status", "approved")
+        .order("created_at", { ascending: false })
         .limit(9);
 
       if (error) {
@@ -47,7 +52,7 @@ export default function NewAppointmentPage() {
         return;
       }
 
-      setDoctors(assignRandomImages((data ?? []) as Doctor[]));
+      setDoctors(processDoctors((data ?? []) as Doctor[]));
     };
 
     fetchInitialDoctors();
@@ -57,7 +62,8 @@ export default function NewAppointmentPage() {
     const supabase = createClient();
     let query = supabase
       .from("doctors")
-      .select("id, full_name, specialty");
+      .select("id, full_name, specialty, bio, consultation_fee, image_url")
+      .eq("verification_status", "approved");
 
     if (filters.specialty) {
       query = query.eq("specialty", filters.specialty);
@@ -70,7 +76,7 @@ export default function NewAppointmentPage() {
       return;
     }
 
-    setDoctors(assignRandomImages((data ?? []) as Doctor[]));
+    setDoctors(processDoctors((data ?? []) as Doctor[]));
   };
 
   return (
@@ -96,11 +102,12 @@ export default function NewAppointmentPage() {
                 id={doctor.id}
                 full_name={doctor.full_name}
                 specialty={doctor.specialty}
+                bio={doctor.bio}
                 city={doctor.city ?? "Minneapolis, MN"}
                 duration={doctor.duration ?? "30 Min"}
-                fee={doctor.fee ?? 650}
-                photoUrl={doctor.photo_url ?? "/images/doctor-placeholder.jpg"}
-                rating={doctor.rating ?? 5.0}
+                fee={doctor.consultation_fee ?? 100}
+                photoUrl={doctor.image_url ?? "/images/doctor-placeholder.jpg"}
+                rating={doctor.rating ?? 4.5}
                 isAvailable={doctor.is_available ?? true}
               />
             ))}
