@@ -66,34 +66,6 @@ export const HeroSection = () => (
                         </div>
                     </div>
 
-                    {/* Search Bar - Mockup */}
-                    <div
-                        className="mt-10 p-2 bg-white rounded-xl shadow-sm border flex flex-col sm:flex-row gap-2"
-                        style={{ borderColor: THEME.colors.lightGrey }}
-                    >
-                        <div className="flex-1 flex items-center px-4 h-12 bg-gray-50 rounded-lg">
-                            <Search size={20} className="text-gray-400 mr-3" />
-                            <input
-                                type="text"
-                                placeholder="Condition, doctor, or specialty..."
-                                className="bg-transparent w-full outline-none text-sm text-gray-700 placeholder-gray-400"
-                            />
-                        </div>
-                        <div className="sm:w-48 flex items-center px-4 h-12 bg-gray-50 rounded-lg border-l-0 sm:border-l border-white sm:border-gray-200">
-                            <MapPin size={20} className="text-gray-400 mr-3" />
-                            <select className="bg-transparent w-full outline-none text-sm text-gray-700">
-                                <option>New York, NY</option>
-                                <option>Los Angeles, CA</option>
-                                <option>Remote</option>
-                            </select>
-                        </div>
-                        <button
-                            className="h-12 px-6 rounded-lg font-medium text-white transition-opacity hover:opacity-90"
-                            style={{ backgroundColor: THEME.colors.black }}
-                        >
-                            Search
-                        </button>
-                    </div>
                 </div>
 
                 {/* Right Column: Visual */}
