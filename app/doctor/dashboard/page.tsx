@@ -1,9 +1,9 @@
 "use client";
 import { DoctorSidebar } from "@/components/doctor/sidebar";
-import { 
-  NextAppointmentCard, 
-  NextAppointmentCardSkeleton, 
-  NoAppointmentCard 
+import {
+  NextAppointmentCard,
+  NextAppointmentCardSkeleton,
+  NoAppointmentCard
 } from "@/components/doctor/next-appointment-card";
 import { TotalPatientsCard } from "@/components/doctor/total-patients-card";
 import { TodayAppointmentsCard } from "@/components/doctor/today-appointments-card";
@@ -18,33 +18,30 @@ interface NextAppointment {
   purpose: string;
 }
 
-type LatestAppointmentItem = {
-  id: string;
-  patientName: string;
-  patientInitials: string; // not used by the card, but comes from API
-  dateTimeLabel: string;   // API field name
-  status: "scheduled" | "completed";
-  description: string | null;
-};
+// Static hardcoded appointments for UI testing
+const staticAppointments = [
+  { id: "1", patientName: "Emma Thompson", time: "Dec 10, 2025, 9:00 AM", status: "scheduled" as const },
+  { id: "2", patientName: "James Wilson", time: "Dec 10, 2025, 10:30 AM", status: "scheduled" as const },
+  { id: "3", patientName: "Sophie Chen", time: "Dec 9, 2025, 2:00 PM", status: "completed" as const },
+  { id: "4", patientName: "Michael Brown", time: "Dec 9, 2025, 11:00 AM", status: "completed" as const },
+  { id: "5", patientName: "Olivia Martinez", time: "Dec 8, 2025, 3:30 PM", status: "completed" as const },
+  { id: "6", patientName: "William Johnson", time: "Dec 8, 2025, 1:00 PM", status: "scheduled" as const },
+  { id: "7", patientName: "Ava Garcia", time: "Dec 7, 2025, 10:00 AM", status: "completed" as const },
+  { id: "8", patientName: "Ethan Davis", time: "Dec 7, 2025, 4:00 PM", status: "cancelled" as const },
+  { id: "9", patientName: "Isabella Rodriguez", time: "Dec 6, 2025, 9:30 AM", status: "completed" as const },
+  { id: "10", patientName: "Liam Anderson", time: "Dec 5, 2025, 2:30 PM", status: "completed" as const },
+];
 
 export default function DoctorDashboardPage() {
   const [nextAppointment, setNextAppointment] = useState<NextAppointment | null>(null);
-  const [latestAppointments, setLatestAppointments] = useState<LatestAppointmentItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [nextRes, latestRes] = await Promise.all([
-          fetch('/api/doctor/next-appointment'),
-          fetch('/api/doctor/latest-appointments'),
-        ]);
-
+        const nextRes = await fetch('/api/doctor/next-appointment');
         const nextData = await nextRes.json();
-        const latestData: LatestAppointmentItem[] = await latestRes.json();
-
         setNextAppointment(nextData ?? null);
-        setLatestAppointments(latestData ?? []);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -54,13 +51,8 @@ export default function DoctorDashboardPage() {
     fetchData();
   }, []);
 
-  // Map API items to the card’s expected shape
-  const latestAppointmentsForCard = latestAppointments.map((item) => ({
-    id: item.id,
-    patientName: item.patientName,
-    time: item.dateTimeLabel,
-    status: item.status as "scheduled" | "completed" | "cancelled",
-  }));
+  // Use static appointments for UI testing
+  const latestAppointmentsForCard = staticAppointments;
 
   return (
     <div className="flex min-h-screen bg-[#F9FAFB]">
