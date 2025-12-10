@@ -118,10 +118,10 @@ export const HeroSection = () => (
                                     <p className="text-sm text-gray-500">Internal Medicine</p>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
+                                    <button className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" aria-label="Start phone call">
                                         <Phone size={18} />
                                     </button>
-                                    <button className="p-3 rounded-full text-white shadow-lg hover:opacity-90" style={{ backgroundColor: THEME.colors.error }}>
+                                    <button className="p-3 rounded-full text-white shadow-lg hover:opacity-90" style={{ backgroundColor: THEME.colors.error }} aria-label="Start video call">
                                         <Video size={18} />
                                     </button>
                                 </div>

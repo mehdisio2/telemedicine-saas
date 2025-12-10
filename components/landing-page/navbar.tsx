@@ -42,6 +42,8 @@ export const Navbar = () => {
                     <button
                         className="md:hidden p-2 rounded-md hover:bg-gray-100"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                        aria-expanded={isMenuOpen}
                     >
                         {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
