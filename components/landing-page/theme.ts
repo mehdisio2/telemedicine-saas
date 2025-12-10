@@ -5,7 +5,7 @@ export const THEME = {
         primaryDark: '#1F8478',
         black: '#111111',
         darkGrey: '#4A4A4A',
-        mediumGrey: '#888888',
+        mediumGrey: '#636363',
         lightGrey: '#E5E5E5',
         offWhite: '#F9FAFB',
         white: '#FFFFFF',
