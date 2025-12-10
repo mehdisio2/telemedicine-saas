@@ -8,11 +8,8 @@ import { SpecialtiesSection } from '@/components/landing-page/specialties-sectio
 import { HowItWorksSection } from '@/components/landing-page/how-it-works-section';
 import { CTASection } from '@/components/landing-page/cta-section';
 import { Footer } from '@/components/landing-page/footer';
-import { AIModal } from '@/components/landing-page/ai-modal';
 
 export default function TelemedicineLanding() {
-  const [showAIModal, setShowAIModal] = useState(false);
-
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: THEME.colors.offWhite }}>
       <Navbar />
@@ -22,7 +19,6 @@ export default function TelemedicineLanding() {
       <HowItWorksSection />
       <CTASection />
       <Footer />
-      {showAIModal && <AIModal onClose={() => setShowAIModal(false)} />}
     </div>
   );
 }
