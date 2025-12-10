@@ -50,7 +50,7 @@ export default async function DoctorVideoCallPage({
             roomName={roomId}
             userDisplayName={`Dr. ${doctor.full_name}`}
             userRole="doctor"
-            returnPath={`/doctor/appointments/${appointment.id}`}
+            returnPath="/doctor/dashboard"
         />
     );
 }

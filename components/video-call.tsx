@@ -71,8 +71,37 @@ export function VideoCall({
                         hideConferenceSubject: false,
                         hideConferenceTimer: false,
                         subject: "TeleMedCare Consultation",
-                        // Theming
+                        // Disable end-of-meeting screens
+                        enableClosePage: false,
+                        disableFeedbackScreen: true,
+                        disablePostMeetingScreen: true,
+                        readOnlyName: true,
+                        // Theming - Project teal colors
                         defaultRemoteDisplayName: "Participant",
+                        // Custom theme with project colors
+                        customTheme: {
+                            palette: {
+                                ui01: "#111111",      // Main background
+                                ui02: "#1a1a1a",      // Secondary background
+                                ui03: "#2AB3A3",      // Primary teal (borders, highlights)
+                                ui04: "#1F8478",      // Dark teal
+                                ui05: "#E6F9F0",      // Light teal
+                                action01: "#2AB3A3",  // Primary action button (teal)
+                                action01Hover: "#1F8478", // Primary hover
+                                action02: "#1F8478",  // Secondary action
+                                action02Hover: "#17635A", // Secondary hover
+                                success01: "#4CAF50", // Success color
+                                focus01: "#2AB3A3",   // Focus ring
+                                text01: "#FFFFFF",    // Primary text
+                                text02: "#E5E5E5",    // Secondary text
+                                text03: "#888888",    // Muted text
+                            },
+                            typography: {
+                                labelBold: {
+                                    fontWeight: 600,
+                                },
+                            },
+                        },
                         // Disable features not needed for telemedicine
                         toolbarButtons: [
                             "camera",
@@ -101,6 +130,12 @@ export function VideoCall({
                         MOBILE_APP_PROMO: false,
                         SETTINGS_SECTIONS: ["devices", "language"],
                         VIDEO_LAYOUT_FIT: "both",
+                        // Additional branding removal
+                        DEFAULT_LOGO_URL: "",
+                        DEFAULT_WELCOME_PAGE_LOGO_URL: "",
+                        HIDE_INVITE_MORE_HEADER: true,
+                        JITSI_WATERMARK_LINK: "",
+                        BRAND_WATERMARK_LINK: "",
                     }}
                     userInfo={{
                         displayName: userDisplayName,
